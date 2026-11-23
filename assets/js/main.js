@@ -122,6 +122,11 @@
         status.textContent = "Please use your business email if you have one. Submit again to continue with this address.";
         return;
       }
+      if (window.location.protocol === "file:") {
+        status.className = "form-status err";
+        status.innerHTML = "The form only sends once the site is online (opened over http/https). You're viewing a local copy. Please test it on the published site.";
+        return;
+      }
       var btn = form.querySelector("button[type=submit]");
       btn.disabled = true; var label = btn.innerHTML; btn.textContent = "Sending…";
       var data = {};
@@ -136,9 +141,14 @@
             var keep = typeInput.value; form.reset(); setType(keep || "Sales inquiry");
             status.className = "form-status ok";
             status.innerHTML = "Thank you — your inquiry has been sent. Our team will reply from <strong>hello@xploit-security.com</strong>, usually within one business day.";
-          } else { throw new Error((res.j && res.j.message) || "Submission failed"); }
+          } else { var err = new Error((res.j && res.j.message) || "Submission failed"); err.fs = true; throw err; }
         })
-        .catch(function () {
+        .catch(function (err) {
+          if (err && err.fs && /activat/i.test(err.message)) {
+            status.className = "form-status err";
+            status.innerHTML = "This form is awaiting activation by the site owner. Please email <a href=\"mailto:hello@xploit-security.com\">hello@xploit-security.com</a> or message us on <a href=\"https://wa.me/14073074965\" target=\"_blank\" rel=\"noopener\">WhatsApp</a> in the meantime.";
+            return;
+          }
           var body = Object.keys(data).filter(function (k) { return k.charAt(0) !== "_"; }).map(function (k) { return k + ": " + data[k]; }).join("\n");
           status.className = "form-status err";
           status.innerHTML = "We couldn't send the form just now. Please email us directly at <a href=\"mailto:hello@xploit-security.com?subject=" +

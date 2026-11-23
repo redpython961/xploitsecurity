@@ -29,6 +29,7 @@ def home():
     prod = [
         ("safemind", "graduation", "SafeMind", "Security awareness SaaS: microlearning, unlimited phishing simulations, AI-driven learning paths and tips in Microsoft Teams and Slack.", "SaaS", "saas"),
         ("xploit-grc", "layers", "Xploit GRC", "Governance, risk and compliance in one platform: 38+ frameworks, risk registers, audits, evidence and IT/OT assets. SaaS or on-premises.", "SaaS · On-prem", "saas"),
+        ("firewall-security-analyzer", "shield-check", "Xploit Firewall Security Analyzer", "Automated firewall configuration audits: CVE checks, risky-rule detection, compliance scoring against NIST, PCI DSS and vendor hardening, with evidence-backed remediation.", "Audit", "saas"),
         ("scada-simulator", "cpu", "SCADA Simulator", "A tailor-made OT cyber range with authentic PLCs and a miniature plant replica to train teams and test defenses safely.", "OT", "ot"),
         ("ot-attack-scenarios", "radar", "OT Cyber Attack Scenarios", "Ten free, browser-based OT/ICS incident scenarios with XP, levels and a final certification exam.", "Free", "free"),
     ]
@@ -65,7 +66,7 @@ def home():
       </div>
       <div class="reveal">
         <p>Xploit Security is the cybersecurity services and technology arm of the Xploit family. We protect critical infrastructure, enterprise applications and government organizations across the region and beyond, with practitioners who have run real IT and OT security programs.</p>
-        <p>We combine hands-on consulting, from penetration testing to vCISO leadership, with software we build ourselves: SafeMind for awareness, Xploit GRC for governance, and the SCADA Simulator for industrial cyber training and testing.</p>
+        <p>We combine hands-on consulting, from penetration testing to vCISO leadership, with software we build ourselves: SafeMind for awareness, Xploit GRC for governance, Xploit Firewall Security Analyzer for firewall audits, and the SCADA Simulator for industrial cyber training and testing.</p>
         <a class="link-arrow" href="{r("about/")}">About Xploit Security {icon("arrow")}</a>
       </div>
     </div>
@@ -82,7 +83,7 @@ def home():
 <section class="section section-alt">
   <div class="container">
     {section_head("Cybersecurity products", "Platforms built by practitioners.", "Commercial SaaS and industrial training platforms that turn security programs into everyday practice, plus a free OT range for everyone.", cyan=True)}
-    <div class="grid grid-4">{prod_cards}</div>
+    <div class="grid grid-3">{prod_cards}</div>
   </div>
 </section>
 

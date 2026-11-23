@@ -2,7 +2,7 @@ from lib import *
 
 def service_ld(name, desc, path, types):
     return {"@context": "https://schema.org", "@type": "Service", "name": name, "description": desc, "serviceType": types,
-            "provider": {"@id": SITE["domain"] + "/#org"}, "areaServed": ["AE", "SA", "Worldwide"], "url": SITE["domain"] + "/" + path}
+            "provider": {"@id": SITE["domain"] + "/#org"}, "areaServed": ["AE", "SA", "Worldwide"], "url": abs_url(path)}
 
 def related(d, exclude):
     items = [(s, n, ds, ic) for s, n, ds, ic in SERVICES if s != exclude][:3]
@@ -118,6 +118,13 @@ def it_sec():
 <div class="step reveal"><span class="num">02</span><h3>Prioritize</h3><p>Risk-based triage using exploitability, exposure and business criticality.</p></div>
 <div class="step reveal"><span class="num">03</span><h3>Remediate</h3><p>Owners, deadlines and practical fix guidance for every finding.</p></div>
 <div class="step reveal"><span class="num">04</span><h3>Verify</h3><p>Retesting and metrics that show risk going down over time.</p></div>
+</div></div></section>
+
+<section class="section section-alt"><div class="container"><div class="split">
+<div class="reveal"><span class="eyebrow">Firewall configuration reviews</span><h2>Audit every firewall rule, not a sample.</h2>
+<p>Our firewall reviews use the Xploit Firewall Security Analyzer to check the full configuration for vulnerable firmware, over-permissive rules, exposed management and weak VPN settings, with compliance scoring and remediation commands for every finding.</p>
+<a class="link-arrow" href="{url(d, "products/firewall-security-analyzer/")}" style="margin-top:12px">Explore the Firewall Security Analyzer {icon("arrow")}</a></div>
+{shot(d, "xfsa-executive-summary", "Xploit Firewall Security Analyzer report executive summary with risk score and key weaknesses", "Firewall assessment report, executive summary (sample data)", frame=False, w=1000, h=1089)}
 </div></div></section>'''
     return svc_page("it-cybersecurity", "IT Cybersecurity", "IT Cybersecurity: Pen Testing & Cloud Security",
         "IT cybersecurity services from Xploit Security: penetration testing for web, mobile, IoT and APIs, cloud security audits for AWS, Azure and GCP, and vulnerability management.",
@@ -254,7 +261,7 @@ def services_hub():
 <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">{disc}</div></div></section>'''
     body += cta_band(d, "Not sure which service you need?", "Describe your challenge and we'll recommend the right starting point: an assessment, a compliance program or ongoing vCISO support.", ("Talk to an expert", "contact/?type=consulting"))
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Xploit Security cybersecurity services",
-          "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": SITE["domain"] + f"/services/{s}/"} for i, (s, n, _, _) in enumerate(SERVICES)]}
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": abs_url(f"services/{s}/")} for i, (s, n, _, _) in enumerate(SERVICES)]}
     return path, page(d, path, "Cybersecurity Services: IT, OT, Compliance & vCISO",
                       "Explore Xploit Security's cybersecurity services: consulting, vCISO, IT cybersecurity and penetration testing, OT and industrial security, compliance and risk management, and security assessments.",
                       body, "sp", ld, crumbs, keywords="Cybersecurity Consulting, IT Cybersecurity Services, OT Cybersecurity, vCISO Services, ISO 27001 Consulting, SOC 2 Compliance, CMMC Consulting")

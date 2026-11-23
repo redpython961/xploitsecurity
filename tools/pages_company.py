@@ -15,7 +15,7 @@ def about():
 <div class="reveal">
 <p>Xploit Security is the cybersecurity consulting, services and software business of the Xploit family. Our services are innovative, proactive and trusted, designed to strengthen digital resilience and compliance in an evolving threat landscape.</p>
 <p>We work across both worlds most providers treat separately: enterprise IT, where data, users and cloud workloads live, and operational technology, where PLCs, SCADA and physical processes keep utilities and industry running. That converged view shapes everything we do, from a penetration test to a board-level risk report.</p>
-<p>Alongside consulting, we develop our own software, SafeMind, Xploit GRC and the SCADA Simulator, because we wanted tools that remove work instead of creating it.</p>
+<p>Alongside consulting, we develop our own software, SafeMind, Xploit GRC, Xploit Firewall Security Analyzer and the SCADA Simulator, because we wanted tools that remove work instead of creating it.</p>
 </div></div></div></section>
 
 <section class="section section-alt"><div class="container"><div class="grid grid-2">
@@ -30,7 +30,7 @@ def about():
 {checks(["Penetration testing (web, mobile, OT and IoT)", "Cloud security audits and architecture reviews", "IT and OT/ICS security assessments", "Governance, risk and compliance", "Data privacy and protection", "Virtual CISO advisory", "Cybersecurity awareness and training"])}
 <a class="link-arrow" href="{url(d, "services/")}" style="margin-top:18px">Explore services {icon("arrow")}</a></div>
 <div class="card reveal"><div class="ico cyan">{icon("layers")}</div><h3>Cybersecurity products</h3><p style="margin-bottom:16px">Commercial SaaS platforms and practical industrial cybersecurity solutions.</p>
-{checks(["SafeMind: cybersecurity awareness SaaS", "Xploit GRC: GRC platform, SaaS or on-premises", "SCADA Simulator: OT awareness and testing", "OT Cyber Attack Scenarios: free resource"], "cyan")}
+{checks(["SafeMind: cybersecurity awareness SaaS", "Xploit GRC: GRC platform, SaaS or on-premises", "Xploit Firewall Security Analyzer: firewall audit & compliance", "SCADA Simulator: OT awareness and testing", "OT Cyber Attack Scenarios: free resource"], "cyan")}
 <a class="link-arrow" href="{url(d, "products/")}" style="margin-top:18px">Explore products {icon("arrow")}</a></div>
 </div></div></section>
 
@@ -69,7 +69,7 @@ def about():
 <p>Xploit Academy is our education business: self-paced and hands-on courses in OT/ICS security, ISO 27001, SOC 2, CMMC, ethical hacking, cloud security and more. Xploit Security focuses on consulting, services and software.</p>
 <div class="btn-row"><a class="btn btn-primary" href="{SITE["academy"]}" target="_blank" rel="noopener">Training → Xploit Academy {icon("external")}</a><a class="btn btn-ghost" href="{url(d, "contact/")}">Talk to Xploit Security</a></div>
 </div></div></section>'''
-    ld = {"@context": "https://schema.org", "@type": "AboutPage", "name": "About Xploit Security", "url": SITE["domain"] + "/" + path, "about": {"@id": SITE["domain"] + "/#org"}}
+    ld = {"@context": "https://schema.org", "@type": "AboutPage", "name": "About Xploit Security", "url": abs_url(path), "about": {"@id": SITE["domain"] + "/#org"}}
     return path, page(d, path, "About Xploit Security: IT & OT Cybersecurity Company in Dubai",
                       "Xploit Security is a Dubai-headquartered cybersecurity services and technology company delivering IT and OT security consulting, compliance and the SafeMind, Xploit GRC and SCADA Simulator platforms.",
                       body, "about", ld, crumbs, keywords="cybersecurity company Dubai, IT and OT cybersecurity, Xploit Security, cybersecurity services UAE")
@@ -90,12 +90,18 @@ FAQ = [
     ("Products", "layers", "products", [
         ("What is SafeMind?", "<p><a href=\"../products/safemind/\">SafeMind</a> is a cybersecurity awareness platform that combines 100+ microlearning lessons, unlimited realistic phishing simulations, AI-powered learning journeys, reporting by individual, department or organization, and awareness tips delivered in Microsoft Teams and Slack.</p>"),
         ("What is Xploit GRC?", "<p><a href=\"../products/xploit-grc/\">Xploit GRC</a> is a cybersecurity governance, risk and compliance platform. It centralizes risk registers, compliance and control assessments, policies, audits, findings and corrective actions, IT and OT assets, third-party risk, evidence and executive dashboards, with a library of 38+ frameworks and the ability to import your own.</p>"),
+        ("What is Xploit Firewall Security Analyzer?", "<p><a href=\"../products/firewall-security-analyzer/\">Xploit Firewall Security Analyzer (XFSA)</a> audits firewall configuration exports against a version-controlled rule library. It flags known firmware vulnerabilities (CVEs), over-permissive and risky rules, exposed management, weak VPN cryptography, and logging and inspection gaps. It scores compliance against standards such as NIST SP 800-53, PCI DSS 4.0.1 and vendor hardening guidance, and produces a report with configuration evidence and remediation for every finding. FortiGate is fully supported today; <a href=\"../contact/?type=sales&amp;interest=firewall-security-analyzer\">contact us</a> about other vendors.</p>"),
         ("Can Xploit GRC be hosted on-premises?", "<p>Yes. Xploit GRC is available as a tenant-isolated SaaS platform, with optional KSA or UAE data residency and dedicated hosting, and it can also be deployed on-premises in your own environment. <a href=\"../contact/?type=sales&amp;interest=xploit-grc\">Contact sales</a> to discuss on-premises licensing.</p>"),
         ("Is SafeMind available as SaaS?", "<p>Yes. SafeMind is a cloud-native SaaS platform running on AWS with a multi-tenant architecture. Pricing is per user per month on a 12-month commitment, starting at $3.40 for 25 to 50 users and decreasing with volume.</p>"),
         ("What is the SCADA Simulator?", "<p>The <a href=\"../products/scada-simulator/\">SCADA Simulator</a> is a tailor-made OT cyber range with authentic Siemens, ABB, Rockwell or Mitsubishi PLCs connected to Level 0 devices and a miniature replica of your plant. It's used for OT awareness training, testing system changes and rehearsing cyberattacks, with an optional attack-simulation add-on covering the full attack chain.</p>"),
         ("Are the OT attack scenarios free?", "<p>Yes, completely free. The <a href=\"../products/ot-attack-scenarios/\">OT Cyber Range</a> offers ten browser-based OT/ICS incident scenarios plus a certification exam. <a href=\"https://cyber.xploitacademy.com/\" target=\"_blank\" rel=\"noopener\">Start the free scenarios</a>.</p>"),
     ]),
 ]
+
+import re as _re
+def _fix(a):
+    """Rewrite '../section/page/' links in FAQ answers to flat file names."""
+    return _re.sub(r'href="\.\./([^"]*)"', lambda m: 'href="../' + pfile(m.group(1).replace("&amp;", "&")).replace("&", "&amp;") + '"', a)
 
 def faq():
     d = 1
@@ -104,7 +110,7 @@ def faq():
     nav = "".join(f'<a href="#{k}">{esc(t)}</a>' for t, ic, k, qs in FAQ)
     groups = ""
     for t, ic, k, qs in FAQ:
-        items = "".join(f'<details class="faq"><summary>{esc(q)}</summary><div class="ans">{a}</div></details>' for q, a in qs)
+        items = "".join(f'<details class="faq"><summary>{esc(q)}</summary><div class="ans">{_fix(a)}</div></details>' for q, a in qs)
         groups += f'<div class="faq-group" id="{k}"><h2>{icon(ic)}{esc(t)}</h2>{items}</div>'
     body = f'''<section class="page-hero grid-bg"><div class="container">{breadcrumb(d, crumbs)}
 <span class="eyebrow">Frequently asked questions</span><h1>Answers, before you ask.</h1>
@@ -114,7 +120,7 @@ def faq():
     ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
         {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": re.sub(r"<[^>]+>", "", a).replace("&amp;", "&")}} for t, ic, k, qs in FAQ for q, a in qs]}
     return path, page(d, path, "FAQ: Services, SafeMind, Xploit GRC & SCADA",
-                      "Frequently asked questions about Xploit Security: industries and markets served, vCISO, ISO 27001, SOC 2 and CMMC consulting, IT and OT assessments, SafeMind, Xploit GRC on-premises and the SCADA Simulator.",
+                      "Frequently asked questions about Xploit Security: industries and markets served, vCISO, ISO 27001, SOC 2 and CMMC consulting, IT and OT assessments, SafeMind, Xploit GRC, the Firewall Security Analyzer and the SCADA Simulator.",
                       body, "faq", ld, crumbs)
 
 def contact():
@@ -139,7 +145,7 @@ def contact():
 <button type="button" role="tab" data-inquiry="Consulting inquiry" aria-selected="false">Consulting</button>
 <button type="button" role="tab" data-inquiry="General contact" aria-selected="false">General</button>
 </div>
-<form id="contact-form" data-endpoint="{SITE["form_endpoint"]}" action="https://formsubmit.co/{SITE["email"]}" method="POST" novalidate>
+<form id="contact-form" data-endpoint="{SITE["form_endpoint"]}" action="{SITE["form_endpoint"].replace("/ajax/", "/")}" method="POST" novalidate>
 <input type="hidden" name="_subject" value="New Sales inquiry — xploit-security.com">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_captcha" value="false">
@@ -174,7 +180,7 @@ def contact():
 <script>
 document.querySelectorAll('.contact-tile[href*="type="]').forEach(function(a){{a.addEventListener('click',function(e){{if(location.pathname.indexOf('/contact')>-1){{e.preventDefault();var t=a.href.indexOf('type=demo')>-1?'Product demo request':'Consulting inquiry';var b=document.querySelector('[data-inquiry="'+t+'"]');if(b)b.click();document.getElementById('f-name').focus();}}}});}});
 </script>'''
-    ld = {"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact Xploit Security", "url": SITE["domain"] + "/" + path}
+    ld = {"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact Xploit Security", "url": abs_url(path)}
     return path, page(d, path, "Contact Xploit Security: Sales, Demos & Consulting",
                       "Contact Xploit Security for cybersecurity consulting, vCISO, compliance and IT/OT assessments, or request a demo of SafeMind, Xploit GRC or the SCADA Simulator. Email hello@xploit-security.com or WhatsApp.",
                       body, "contact", ld, crumbs)
@@ -185,7 +191,8 @@ def notfound():
 <div class="btn-row" style="justify-content:center;margin-top:24px"><a class="btn btn-primary" href="/">Go to homepage</a><a class="btn btn-ghost" href="/services/">Services</a><a class="btn btn-ghost" href="/products/">Products</a><a class="btn btn-ghost" href="/contact/">Contact</a></div></div></section>'''
     # 404 is served from any path by GitHub Pages, so it uses root-absolute links (custom domain at root).
     html_ = page(0, "404.html", "Page not found", "The page you requested could not be found. Explore Xploit Security IT and OT cybersecurity services and products.", body, robots="noindex,follow")
-    html_ = html_.replace('href="./', 'href="/').replace('src="./', 'src="/')
+    # GitHub Pages serves 404.html for any missing path, so make its links root-absolute.
+    html_ = _re.sub(r'(href|src)="(?!https?:|mailto:|tel:|#|/)([^"]*)"', r'\1="/\2"', html_)
     return "404.html", html_
 
 ALL = [about, faq, contact]

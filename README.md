@@ -9,42 +9,21 @@ The static corporate website for **Xploit Security** (xploit-security.com), the 
 ## 1. What's in the repository
 
 ```
-/                         ← GitHub Pages serves this folder (repo root)
-├── index.html            Home
-├── services/             Services hub + 6 service pages
-│   ├── cybersecurity-consulting/
-│   ├── vciso/
-│   ├── it-cybersecurity/
-│   ├── ot-industrial-cybersecurity/
-│   ├── compliance-risk-management/
-│   └── security-assessments-audits/
-├── products/             Products hub + 4 product pages
-│   ├── safemind/
-│   ├── xploit-grc/
-│   ├── ot-attack-scenarios/
-│   └── scada-simulator/
-├── about/  faq/  contact/
-├── 404.html              Custom not-found page (served automatically by GitHub Pages)
-├── assets/
-│   ├── css/styles.css    Design system (brand colours, type, components)
-│   ├── js/main.js        Navigation, mega menu, form, calculators (no dependencies)
-│   ├── fonts/            Self-hosted Space Grotesk + JetBrains Mono (SIL OFL)
-│   └── img/              brand/ (logo, favicons, OG image), products/ (real screenshots), clients/
-├── CNAME                 xploit-security.com
-├── .nojekyll             Serve files as-is (no Jekyll processing)
-├── sitemap.xml  robots.txt  site.webmanifest  favicon.ico
-└── tools/                Source generator + QA script (not needed by the live site)
-    ├── build.py          Regenerates every page, sitemap, robots, manifest, CNAME
-    ├── lib.py            Shared layout: <head>/SEO, header + mega menu, footer, components, icons
-    ├── pages_home.py     Home page
-    ├── pages_services.py Services hub + service pages
-    ├── pages_products.py Products hub + product pages
-    ├── pages_company.py  About, FAQ, Contact, 404
-    ├── hero_svg.py       Homepage IT/OT illustration
-    └── check.py          QA: broken links/assets, alt text, titles, meta, JSON-LD
+/                          ← GitHub Pages serves this folder (repo root)
+├── index.html             Home
+├── services/              index.html (hub) + one folder per service
+│   ├── cybersecurity-consulting/   vciso/   it-cybersecurity/
+│   └── ot-industrial-cybersecurity/   compliance-risk-management/   security-assessments-audits/
+├── products/              index.html (hub) + one folder per product
+│   └── safemind/   xploit-grc/   firewall-security-analyzer/   ot-attack-scenarios/   scada-simulator/
+├── about/  faq/  contact/ each contains index.html
+├── 404.html               Custom not-found page (served automatically by GitHub Pages)
+├── assets/                css/, js/, fonts/, img/ (brand, products, clients)
+├── CNAME  .nojekyll  sitemap.xml  robots.txt  site.webmanifest  favicon.ico
+└── tools/                 Generator + QA scripts (not needed by the live site)
 ```
 
-All URLs are folder-style (`/services/vciso/`), so they work on GitHub Pages with no routing configuration, and refreshing a page never breaks. Internal links are relative, so the site also works from a project URL (`username.github.io/repo/`) during testing.
+Each page lives in its own folder, giving clean public URLs such as `xploit-security.com/services/vciso/`. Internal links point directly to each folder's `index.html`, so the site works on GitHub Pages, from a project URL (`username.github.io/repo/`), and when you double-click `index.html` on your computer. The contact form only sends when the site is opened over http/https, not from a local file.
 
 ---
 
@@ -103,15 +82,10 @@ If you ever use a different domain, update `SITE["domain"]` in `tools/lib.py` (c
 GitHub Pages can't run server code, so the form posts to **[FormSubmit](https://formsubmit.co)**, a free form-to-email service, using its AJAX endpoint:
 
 ```
-https://formsubmit.co/ajax/hello@xploit-security.com
+https://formsubmit.co/ajax/00a61be3578636a903da694c5b5a7a41   ← private alias for hello@xploit-security.com
 ```
 
-**One-time activation**
-1. Deploy the site and submit the contact form once yourself.
-2. FormSubmit emails an **activation link** to `hello@xploit-security.com`. Click it.
-3. From then on, every submission arrives in that inbox as a formatted table, with the visitor's email set as **Reply-To**.
-
-**Recommended hardening:** after activation, FormSubmit shows a random alias for your address (e.g. `https://formsubmit.co/ajax/abc123def456`). Replace the email address in `SITE["form_endpoint"]` (`tools/lib.py`) with that alias and rebuild, so your address isn't visible in the page source.
+**One-time activation:** click **Activate Form** in the FormSubmit email sent to `hello@xploit-security.com`. Until then, the form tells visitors it is awaiting activation and offers email/WhatsApp. After activation, every submission arrives in that inbox as a formatted table, with the visitor's email set as **Reply-To**. The endpoint already uses FormSubmit's private alias, so your address isn't exposed in the page source.
 
 **What the form sends:** inquiry type (Sales / Product demo / Consulting / General), name, business email, company, country, service or product of interest, inquiry details and consent. A honeypot field (`_honey`) filters bots.
 

@@ -11,11 +11,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
-from lib import SITE
+from lib import SITE, pfile, abs_url
 import pages_home, pages_services, pages_products, pages_company
 
 def write(rel_path, content):
-    out = os.path.join(ROOT, rel_path if rel_path.endswith(".html") else os.path.join(rel_path, "index.html"))
+    out = os.path.join(ROOT, pfile(rel_path))
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:
         f.write(content)
@@ -28,11 +28,11 @@ def main():
         for fn in mod.ALL:
             p, html_ = fn()
             write(p, html_)
-            paths.append((p, "0.9" if p.count("/") == 1 else "0.8"))
+            paths.append((p, "0.9" if p.count("/") <= 1 else "0.8"))
     p, html_ = pages_company.notfound(); write(p, html_)
 
     today = datetime.date.today().isoformat()
-    urls = "\n".join(f"  <url><loc>{SITE['domain']}/{p}</loc><lastmod>{today}</lastmod><priority>{pr}</priority></url>" for p, pr in paths)
+    urls = "\n".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{today}</lastmod><priority>{pr}</priority></url>" for p, pr in paths)
     with open(os.path.join(ROOT, "sitemap.xml"), "w") as f:
         f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n')
     with open(os.path.join(ROOT, "robots.txt"), "w") as f:

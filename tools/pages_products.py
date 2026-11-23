@@ -2,7 +2,7 @@ from lib import *
 
 def prod_ld(name, desc, path, category, offers=None, os="Web"):
     ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": name, "description": desc, "applicationCategory": category,
-          "operatingSystem": os, "url": SITE["domain"] + "/" + path, "publisher": {"@id": SITE["domain"] + "/#org"}}
+          "operatingSystem": os, "url": abs_url(path), "publisher": {"@id": SITE["domain"] + "/#org"}}
     if offers:
         ld["offers"] = offers
     return ld
@@ -10,7 +10,7 @@ def prod_ld(name, desc, path, category, offers=None, os="Web"):
 def other_products(d, exclude):
     cards = "".join(card(ic, esc(n), esc(ds), url(d, f"products/{s}/"), cyan=True, tag=t, tagcls={"Free": "free", "OT": "ot"}.get(t, "saas"))
                     for s, n, ds, ic, t in PRODUCTS if s != exclude)
-    return f'<section class="section section-alt"><div class="container">{section_head("More from Xploit Security", "Explore our other platforms.", cyan=True)}<div class="grid grid-3">{cards}</div></div></section>'
+    return f'<section class="section section-alt"><div class="container">{section_head("More from Xploit Security", "Explore our other platforms.", cyan=True)}<div class="grid grid-4">{cards}</div></div></section>'
 
 # ---------------------------------------------------------------------------
 def safemind():
@@ -463,6 +463,103 @@ def scada():
     return path, page(d, path, "SCADA Simulator: OT Cyber Range & Testing", desc, body, "sp", ld, crumbs,
                       keywords="SCADA Simulator, OT cyber range, ICS training, SCADA security training, PLC training, OT cybersecurity testing, industrial cybersecurity")
 
+
+# ---------------------------------------------------------------------------
+def xfsa():
+    d = 2
+    path = "products/firewall-security-analyzer/"
+    crumbs = [("Products", "products/"), ("Xploit Firewall Security Analyzer", path)]
+    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo&interest=firewall-security-analyzer")}">Request a demo {icon("arrow")}</a><a class="btn btn-ghost" href="{url(d, "contact/?type=sales&interest=firewall-security-analyzer")}">Book a firewall assessment</a>'
+    side = f"""<h3>Sample assessment</h3>
+<div class="kpi-row" style="margin-top:4px"><div><strong class="text-red">10.0</strong><span>risk score / 10</span></div><div><strong>48</strong><span>findings</span></div><div><strong class="text-red">9 / 8</strong><span>critical / high</span></div></div>
+<div style="height:16px"></div>{chips(["NIST SP 800-53 Rev. 5", "PCI DSS 4.0.1", "Xploit Firewall Baseline", "Vendor hardening"], "red")}
+<p class="note">From a sample report on a FortiGate edge firewall.</p>"""
+    hero = page_hero(d, crumbs, "Xploit Firewall Security Analyzer · XFSA", "Secure your network. Validate your defenses. Stay compliant.",
+                     "Automated, evidence-based firewall configuration audits. XFSA reads your firewall's configuration, finds vulnerable firmware, risky rules and hardening gaps, scores compliance, and tells you exactly how to fix each issue.", btns, side)
+    domains = [("key", "Authentication &amp; administration", "Default and excess admin accounts, MFA, password and lockout policy, trusted hosts, banners, LDAP over TLS."),
+               ("network", "Network security &amp; firewall policies", "Any-any rules, insecure services, untrusted inbound access, disabled or undocumented rules, unlogged denies."),
+               ("lock", "VPN &amp; cryptography", "Weak IPsec ciphers, integrity algorithms and DH groups, IKEv1, legacy TLS on SSL VPN, VPN without MFA."),
+               ("activity", "Monitoring &amp; logging", "Remote log forwarding, logging on rules, authenticated NTP, SNMP v1/v2c and default communities."),
+               ("eye", "Security inspection", "IPS, anti-malware, web filtering, application control and DNS security on internet-bound and published traffic."),
+               ("server", "Infrastructure &amp; resilience", "Exposed management planes, HA, routing protocol authentication and vendor-specific hardening settings."),
+               ("bug", "Vulnerabilities", "Running firmware checked against known CVEs with affected ranges, CVSS scores and fixed releases.")]
+    dom_html = "".join(card(ic, t, x) for ic, t, x in domains)
+    body = hero + f"""
+<section class="section"><div class="container">
+{section_head("Why XFSA", "Firewalls drift. Attackers notice first.", "Rules pile up, temporary access becomes permanent, firmware falls behind and management interfaces end up on the internet. XFSA turns a configuration export into a clear, prioritized and defensible picture of your firewall's security posture.")}
+<div class="grid grid-3">
+{card("search", "Full-configuration coverage", "Every rule, object and system setting is evaluated, not a sample. Sections the parser can't read are reported as Not Assessed, never as compliant.")}
+{card("bug", "Known-vulnerability detection", "Firmware versions are matched to vendor advisories, for example FortiOS SSL VPN CVEs, with CVSS scores and the exact fixed releases.")}
+{card("scale", "Compliance scoring", "Pass, fail, manual-review and N/A results per control, with compliance percentages for each selected standard.")}
+{card("file", "Evidence for every finding", "Each finding quotes the exact configuration lines that triggered it, with the expected secure configuration.")}
+{card("terminal", "Remediation you can apply", "Plain-language remediation plus vendor CLI snippets, technical risk and business impact (confidentiality, integrity, availability).")}
+{card("shield-check", "Deterministic and repeatable", "Findings come from version-controlled rules, not AI guesses, so results are consistent, explainable and audit-friendly.")}
+</div></div></section>
+
+<section class="section section-alt"><div class="container">
+{section_head("What it checks", "Seven security domains, one rule library.", "The Xploit Firewall Security Baseline groups checks into the domains attackers and auditors care about.")}
+<div class="grid grid-4">{dom_html}</div>
+</div></section>
+
+<section class="section"><div class="container"><div class="split">
+<div class="reveal"><span class="eyebrow">Executive summary</span><h2>Risk your leadership understands in one page.</h2>
+<p>Every report opens with an overall risk score, a security score, compliance percentage, findings by severity and domain, the key weaknesses and prioritized recommendations, ready for a CISO, auditor or board pack.</p>
+{checks(["Risk score from 0 to 10 and security score out of 100", "Findings by severity: Critical, High, Medium, Low, Informational", "Top weaknesses with individual risk scores", "Priority recommendations in order of impact"])}</div>
+{shot(d, "xfsa-executive-summary", "XFSA report executive summary showing risk score, findings by severity and key security weaknesses", "Executive summary (sample report)", frame=False, w=1000, h=1089)}
+</div></div></section>
+
+<section class="section section-alt"><div class="container"><div class="split reverse">
+<div class="reveal"><span class="eyebrow">Compliance</span><h2>Mapped to the standards you answer to.</h2>
+<p>Select the standards for each assessment and XFSA maps every rule to their controls, showing pass, fail, manual review, not applicable and not assessed results, plus the list of failed controls.</p>
+{chips(["NIST SP 800-53 Rev. 5", "PCI DSS 4.0.1", "Xploit Firewall Security Baseline 1.0", "Fortinet FortiGate vendor hardening"], "red")}
+<p class="note">Controls are mapped to framework requirements such as NIST AC-17, CM-7 and SI-2, and PCI DSS 1.2.5, 6.3.3 and 10.6.3.</p></div>
+{shot(d, "xfsa-compliance-status", "XFSA compliance status chart and table per standard with failed controls", "Compliance status per standard (sample report)", frame=False, w=1000, h=806)}
+</div></div></section>
+
+<section class="section"><div class="container"><div class="split">
+<div class="reveal"><span class="eyebrow">Detailed findings</span><h2>From finding to fix, with the evidence attached.</h2>
+<p>Each finding includes its severity and risk score, the security domain and rule ID, the configuration evidence, the expected secure configuration, technical risk, business impact, remediation steps with CLI commands, the related CVE and the mapped controls.</p>
+{checks(["Exact configuration lines quoted as evidence", "Vendor CLI remediation snippets", "CVE and CVSS where applicable", "NIST and PCI DSS control mapping"])}</div>
+{shot(d, "xfsa-finding-detail", "XFSA detailed finding with configuration evidence, risk, business impact and remediation", "Detailed finding with remediation (sample report)", frame=False, w=1000, h=962)}
+</div></div></section>
+
+<section class="section section-alt"><div class="container">
+{section_head("How it works", "From configuration file to board-ready report.")}
+<div class="steps">
+<div class="step reveal"><span class="num">01</span><h3>Export</h3><p>Export the firewall configuration and register the device, its criticality and environment.</p></div>
+<div class="step reveal"><span class="num">02</span><h3>Parse</h3><p>XFSA parses the configuration, records its SHA-256 hash and shows which sections it could read.</p></div>
+<div class="step reveal"><span class="num">03</span><h3>Assess</h3><p>Version-controlled rules evaluate the configuration against the standards you select.</p></div>
+<div class="step reveal"><span class="num">04</span><h3>Report</h3><p>Download a branded report with scores, compliance, findings and remediation.</p></div>
+</div></div></section>
+
+<section class="section"><div class="container"><div class="split">
+<div class="reveal"><span class="eyebrow">Methodology</span><h2>Transparent scoring you can defend.</h2>
+<p>Risk scores combine each rule's base severity with exposure (reachability from untrusted zones), device criticality and environment. CVSS is used as a floor for known vulnerabilities.</p>
+<div class="table-wrap" style="margin-top:20px"><table class="data"><caption class="sr-only">XFSA severity bands</caption><thead><tr><th scope="col">Severity</th><th scope="col">Risk score</th></tr></thead><tbody>
+<tr><td>Critical</td><td>≥ 9.0</td></tr><tr><td>High</td><td>≥ 7.0</td></tr><tr><td>Medium</td><td>≥ 4.0</td></tr><tr><td>Low</td><td>&gt; 0</td></tr></tbody></table></div></div>
+<div class="reveal"><div class="grid" style="gap:14px">
+{card("check", "No AI-generated findings", "No AI service generates findings or evidence. Every result traces back to a specific rule and configuration line.")}
+{card("eye", "Honest coverage", "Controls that can't be determined from configuration are marked Manual Review; missing sections are Not Assessed.")}
+{card("fingerprint", "Traceable input", "The analyzed file is identified by its SHA-256 hash, so every report is tied to an exact configuration.")}
+</div></div>
+</div></div></section>
+
+<section class="section section-alt"><div class="container">
+{section_head("Who it's for", "Built for teams that own or audit firewalls.")}
+<div class="grid grid-4">
+{card("shield", "Security teams", "Continuously validate perimeter and internal firewalls against your baseline.")}
+{card("clipboard", "Auditors &amp; GRC", "Evidence-backed results for PCI DSS, NIST and internal audits.")}
+{card("briefcase", "Consultants &amp; MSSPs", "Deliver consistent, branded firewall assessments across clients.")}
+{card("factory", "Utilities &amp; industry", "Verify the firewalls that separate corporate IT from OT networks.")}
+</div>
+<p class="note">Vendor support: Fortinet FortiGate configurations are fully supported today. Contact us about other firewall platforms. Prefer a done-for-you review? Our <a class="text-red" href="{url(d, "services/security-assessments-audits/")}">security assessments</a> team can run XFSA for you.</p>
+</div></section>
+""" + other_products(d, "firewall-security-analyzer") + cta_band(d, "Find the gaps in your firewall before attackers do.", "Book a demo of XFSA or send us a configuration for a confidential firewall security assessment.", ("Request a demo", "contact/?type=demo&interest=firewall-security-analyzer"), ("Book an assessment", "contact/?type=sales&interest=firewall-security-analyzer"))
+    desc = "Xploit Firewall Security Analyzer (XFSA) audits firewall configurations for CVEs, risky rules and hardening gaps, scores compliance with NIST SP 800-53 and PCI DSS 4.0.1, and reports evidence and remediation."
+    return path, page(d, path, "Xploit Firewall Security Analyzer (XFSA)", desc, body, "sp",
+                      prod_ld("Xploit Firewall Security Analyzer", desc, path, "SecurityApplication"), crumbs,
+                      keywords="firewall security analyzer, firewall configuration audit, firewall compliance, FortiGate audit, firewall rule review, PCI DSS firewall, NIST 800-53 firewall")
+
 def products_hub():
     d = 1
     path = "products/"
@@ -470,10 +567,11 @@ def products_hub():
     btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo")}">Request a demo {icon("arrow")}</a><a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Try the free OT range {icon("external")}</a>'
     hero = page_hero(d, crumbs, "Cybersecurity products", "Platforms that make security stick.",
                      "Commercial SaaS and practical industrial cybersecurity solutions, built by the same practitioners who deliver our services.", btns,
-                     f'<h3>Portfolio</h3>{checks(["SafeMind: awareness SaaS", "Xploit GRC: SaaS or on-premises", "SCADA Simulator: OT awareness & testing", "OT Attack Scenarios: free"], "cyan")}', ot=True, eyebrow_cyan=True)
+                     f'<h3>Portfolio</h3>{checks(["SafeMind: awareness SaaS", "Xploit GRC: SaaS or on-premises", "Firewall Security Analyzer: firewall audits", "SCADA Simulator: OT awareness & testing", "OT Attack Scenarios: free"], "cyan")}', ot=True, eyebrow_cyan=True)
     blocks = [
         ("safemind", "SafeMind", "Security awareness SaaS", "Microlearning, unlimited phishing simulations, AI-powered learning journeys, reporting and Microsoft Teams and Slack tips.", "safemind-admin-overview", 938, 406),
         ("xploit-grc", "Xploit GRC", "Governance, risk &amp; compliance platform", "38+ frameworks, risk registers, audits, evidence, IT/OT assets, workflows and executive dashboards. SaaS or on-premises.", "grc-dashboard", 1100, 687),
+        ("firewall-security-analyzer", "Xploit Firewall Security Analyzer", "Firewall configuration audit &amp; compliance", "Automated firewall audits with CVE detection, risky-rule analysis, compliance scoring against NIST SP 800-53 and PCI DSS, and evidence-backed remediation.", "xfsa-executive-summary", 1000, 1089),
         ("scada-simulator", "SCADA Simulator", "OT awareness &amp; testing platform", "Authentic PLCs, Level 0 devices and a miniature plant replica for hands-on training and attack testing.", "scada-plc-level0", 1000, 673),
         ("ot-attack-scenarios", "OT Cyber Attack Scenarios", "Free OT awareness range", "Ten browser-based OT/ICS incident scenarios with XP, levels and a certification exam. Free.", None, 0, 0),
     ]
@@ -482,11 +580,11 @@ def products_hub():
         vis = shot(d, img, f"{n} product screen", None, frame=(img and img.startswith(("grc", "safemind"))), w=w, h=h) if img else f'<div class="grid grid-2 reveal"><div class="unit"><div class="meta"><span>UNIT-02 · REMOTE ACCESS</span><span>9 MIN</span></div><h3>The Vendor Who Called Twice</h3></div><div class="unit"><div class="meta"><span>UNIT-08 · ACCESS CONTROL</span><span>8 MIN</span></div><h3>Default Passwords Expose Critical Systems</h3></div><div class="unit"><div class="meta"><span>UNIT-09 · PHYSICAL</span><span>8 MIN</span></div><h3>The Fake Maintenance Technician</h3></div><div class="unit"><div class="meta"><span>UNIT-10 · REMOTE ACCESS</span><span>9 MIN</span></div><h3>Compromised Vendor Remote Access</h3></div></div>'
         primary = f'<a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Explore Free OT Attack Scenarios {icon("external")}</a>' if s == "ot-attack-scenarios" else f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo&interest="+s)}">Request a demo</a>'
         out += f'''<div class="split {"reverse" if i % 2 else ""}" style="margin-bottom:96px"><div class="reveal"><span class="eyebrow {"cyan" if s in ("scada-simulator","ot-attack-scenarios") else ""}">{sub}</span><h2>{n}</h2><p class="lead">{t}</p><div class="btn-row"><a class="btn btn-ghost" href="{url(d, "products/"+s+"/")}">Learn more {icon("arrow")}</a>{primary}</div></div>{vis}</div>'''
-    body = hero + f'<section class="section"><div class="container">{out}</div></section>' + cta_band(d, "Want to see a platform live?", "Book a guided demo of SafeMind, Xploit GRC or the SCADA Simulator with our team.", ("Request a product demo", "contact/?type=demo"))
+    body = hero + f'<section class="section"><div class="container">{out}</div></section>' + cta_band(d, "Want to see a platform live?", "Book a guided demo of SafeMind, Xploit GRC, the Firewall Security Analyzer or the SCADA Simulator with our team.", ("Request a product demo", "contact/?type=demo"))
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Xploit Security products",
-          "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": SITE["domain"] + f"/products/{s}/"} for i, (s, n, _, _, _) in enumerate(PRODUCTS)]}
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": abs_url(f"products/{s}/")} for i, (s, n, _, _, _) in enumerate(PRODUCTS)]}
     return path, page(d, path, "Products: SafeMind, Xploit GRC, SCADA Simulator",
-                      "Xploit Security's cybersecurity products: SafeMind awareness SaaS, Xploit GRC governance, risk and compliance software, the SCADA Simulator OT cyber range, and free OT attack scenarios.",
+                      "Xploit Security products: SafeMind awareness SaaS, Xploit GRC, Xploit Firewall Security Analyzer, the SCADA Simulator OT cyber range, and free OT attack scenarios.",
                       body, "sp", ld, crumbs, keywords="Cybersecurity GRC Software, Cybersecurity Awareness SaaS, SCADA Simulator, OT cyber range, security products")
 
-ALL = [products_hub, safemind, grc, scenarios, scada]
+ALL = [products_hub, safemind, grc, xfsa, scenarios, scada]

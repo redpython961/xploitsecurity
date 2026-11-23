@@ -10,7 +10,7 @@ SITE = {
     "academy": "https://www.xploitacademy.com/",
     "range": "https://cyber.xploitacademy.com/",
     "tagline": "Securing IT. Protecting OT. Enabling Trust.",
-    "form_endpoint": "https://formsubmit.co/ajax/hello@xploit-security.com",
+    "form_endpoint": "https://formsubmit.co/ajax/00a61be3578636a903da694c5b5a7a41",  # FormSubmit alias for hello@xploit-security.com
     "og_image": "/assets/img/brand/og-image.png",
 }
 
@@ -92,19 +92,40 @@ SERVICES = [
 PRODUCTS = [
     ("safemind", "SafeMind", "Security awareness SaaS", "graduation", "SaaS"),
     ("xploit-grc", "Xploit GRC", "GRC platform, SaaS or on-premises", "layers", "SaaS · On-prem"),
+    ("firewall-security-analyzer", "Xploit Firewall Security Analyzer", "Firewall configuration audit & compliance", "shield-check", "Audit"),
     ("ot-attack-scenarios", "OT Cyber Attack Scenarios", "Free OT awareness range", "radar", "Free"),
     ("scada-simulator", "SCADA Simulator", "OT awareness & testing platform", "cpu", "OT"),
 ]
 
+def pfile(path):
+    """Map a logical page path to its file inside the folder layout.
+    ''->index.html, 'services/'->services/index.html, 'services/vciso/'->services/vciso/index.html,
+    'contact/?type=demo'->contact/index.html?type=demo. Asset paths are returned unchanged.
+    Linking to index.html explicitly makes pages open both on GitHub Pages and from a local folder."""
+    q = ""
+    if "?" in path:
+        path, q = path.split("?", 1); q = "?" + q
+    frag = ""
+    if "#" in path:
+        path, frag = path.split("#", 1); frag = "#" + frag
+    if path.startswith("assets/") or "." in path.rsplit("/", 1)[-1]:
+        return path + q + frag
+    p = path.strip("/")
+    return (p + "/index.html" if p else "index.html") + q + frag
+
+def abs_url(path):
+    """Clean public URL (folder style) used for canonical, Open Graph, sitemap and JSON-LD."""
+    p = path.split("?")[0]
+    if p.endswith(".html") and "/" not in p and p != "index.html":
+        return SITE["domain"] + "/" + p
+    return SITE["domain"] + "/" + p.strip("/") + ("/" if p.strip("/") else "")
+
 def rel(depth):
-    return "../" * depth if depth else "./"
+    return "../" * depth
 
 def url(depth, path):
-    """path like 'services/vciso/' or '' for home; returns relative link."""
-    p = rel(depth) + path
-    if p == "./":
-        return "./"
-    return p
+    """Relative link from a page at the given folder depth to a page or asset."""
+    return rel(depth) + pfile(path)
 
 def header(depth, active):
     r = lambda p: url(depth, p)
@@ -157,7 +178,7 @@ def footer(depth):
     <div class="footer-grid">
       <div class="footer-about">
         <a class="brand" href="{r("")}" aria-label="Xploit Security home"><img src="{r("assets/img/brand/xploit-mark.png")}" alt="" width="40" height="40" loading="lazy"><span class="brand-text"><strong>XPLOIT</strong><span>SECURITY</span></span></a>
-        <p>Xploit Security delivers IT and OT cybersecurity consulting, compliance and assessment services, and builds the SafeMind, Xploit GRC and SCADA Simulator platforms. Headquartered in Dubai, serving clients worldwide.</p>
+        <p>Xploit Security delivers IT and OT cybersecurity consulting, compliance and assessment services, and builds the SafeMind, Xploit GRC, Xploit Firewall Security Analyzer and SCADA Simulator platforms. Headquartered in Dubai, serving clients worldwide.</p>
         <div class="footer-contact">
           <a href="mailto:{SITE["email"]}">{icon("mail")}{SITE["email"]}</a>
           <a href="{SITE["wa"]}" target="_blank" rel="noopener">{icon("message")}WhatsApp {SITE["wa_display"]}</a>
@@ -195,12 +216,12 @@ ORG_LD = {
 
 def page(depth, path, title, desc, body, active="", ld=None, crumbs=None, robots="index,follow", keywords=""):
     r = rel(depth)
-    canon = SITE["domain"] + "/" + path
+    canon = abs_url(path)
     lds = [ORG_LD]
     if crumbs:
         items = [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE["domain"] + "/"}]
         for i, (n, p) in enumerate(crumbs, start=2):
-            items.append({"@type": "ListItem", "position": i, "name": n, "item": SITE["domain"] + "/" + p})
+            items.append({"@type": "ListItem", "position": i, "name": n, "item": abs_url(p)})
         lds.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items})
     if ld:
         lds.extend(ld if isinstance(ld, list) else [ld])
