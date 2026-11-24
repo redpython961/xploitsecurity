@@ -13,9 +13,26 @@ def svc_page(slug, name, title, desc, kw, eyebrow, h1, lead, side, body_html, ot
     d = 2
     path = f"services/{slug}/"
     crumbs = [("Services", "services/"), (name, path)]
-    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=consulting&interest="+slug)}">Request a consultation {icon("arrow")}</a><a class="btn btn-ghost" href="{SITE["wa"]}" target="_blank" rel="noopener">Talk on WhatsApp</a>'
+    btns = f'<a class="btn btn-primary" href="#consultation">Request a Consultation {icon("arrow")}</a><a class="btn btn-ghost" href="{SITE["wa"]}" target="_blank" rel="noopener">Talk on WhatsApp</a>'
     hero = page_hero(d, crumbs, eyebrow, h1, lead, btns, side, ot=ot, eyebrow_cyan=ot)
-    body = hero + body_html + related(d, slug) + cta_band(d, f"Ready to discuss {name.lower()}?", "Share your scope and objectives. We'll come back with a tailored approach, timeline and proposal.", ("Request a consultation", "contact/?type=consulting&interest=" + slug))
+    form = lead_form("consult", "Consultation request", name, "Request a Consultation",
+                     "Share a few details and a senior consultant will be in touch.", "Request a Consultation",
+                     "Thank you, your consultation request has been received.",
+                     [("Timeline", "when", ["As soon as possible", "Within 1 month", "1–3 months", "Exploring options"])])
+    consult = f"""<section class="section" id="consultation"><div class="container"><div class="offer">
+<div class="reveal"><span class="badge">{icon("briefcase")} Consultation</span>
+<h2>Let's talk about {esc(name)}.</h2>
+<p class="lead">Share your scope and objectives. A senior consultant will come back with a tailored approach, timeline and proposal.</p>
+<ol class="steps-mini">
+<li><span><strong>Tell us your goals</strong>Scope, environment (IT, OT or both), regulators and deadlines.</span></li>
+<li><span><strong>Discovery call</strong>A short call with a practitioner to clarify requirements.</span></li>
+<li><span><strong>Tailored proposal</strong>Approach, deliverables, timeline and fees, in writing.</span></li>
+</ol>
+<div class="trust-row"><span>{icon("check")}On-site in Dubai or remote</span><span>{icon("check")}Practitioner-led</span><span>{icon("check")}Response within one business day</span></div>
+</div>
+{form}
+</div></div></section>"""
+    body = hero + body_html + related(d, slug) + consult + sticky_cta(name, "Request a Consultation", "#consultation")
     return path, page(d, path, title, desc, body, "sp", service_ld(name, desc, path, name), crumbs, keywords=kw)
 
 # ---------------------------------------------------------------------------
@@ -252,14 +269,14 @@ def services_hub():
                    ("graduation", "Cybersecurity awareness and training")]
     cards = "".join(card(ic, esc(n), esc(ds), url(d, f"services/{s}/")) for s, n, ds, ic in SERVICES)
     disc = "".join(f'<div class="industry reveal">{icon(ic)}{esc(n)}</div>' for ic, n in disciplines)
-    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=consulting")}">Book a Consultation {icon("arrow")}</a><a class="btn btn-ghost" href="{url(d, "products/")}">View products</a>'
+    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=consulting")}">Request a Consultation {icon("arrow")}</a><a class="btn btn-ghost" href="{url(d, "products/")}">View products</a>'
     side = f'<h3>Frameworks covered</h3>{chips(["ISO 27001", "NIST", "PCI DSS", "GDPR", "SOC 2", "CMMC", "NCA ECC", "NCA CCC", "SAMA", "SACS-002", "NESA", "CBUAE", "ADGM", "DIFC", "IEC 62443"], "red")}'
     body = page_hero(d, crumbs, "Cybersecurity services", "IT and OT cybersecurity services that strengthen resilience.",
                      "We deliver innovative, proactive and trusted services that protect critical infrastructure, enterprise applications and government organizations, designed to strengthen digital resilience and compliance in an evolving threat landscape.", btns, side)
     body += f'''<section class="section"><div class="container">{section_head("Our services", "Choose where to start.")}<div class="grid grid-3">{cards}</div></div></section>
 <section class="section section-alt"><div class="container">{section_head("Seven disciplines, one security partner", "End-to-end coverage, from assessment to remediation to ongoing advisory.")}
 <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">{disc}</div></div></section>'''
-    body += cta_band(d, "Not sure which service you need?", "Describe your challenge and we'll recommend the right starting point: an assessment, a compliance program or ongoing vCISO support.", ("Talk to an expert", "contact/?type=consulting"))
+    body += cta_band(d, "Not sure which service you need?", "Describe your challenge and we'll recommend the right starting point: an assessment, a compliance program or ongoing vCISO support.", ("Request a Consultation", "contact/?type=consulting"))
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Xploit Security cybersecurity services",
           "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": abs_url(f"services/{s}/")} for i, (s, n, _, _) in enumerate(SERVICES)]}
     return path, page(d, path, "Cybersecurity Services: IT, OT, Compliance & vCISO",

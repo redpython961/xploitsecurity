@@ -17,7 +17,7 @@ def safemind():
     d = 2
     path = "products/safemind/"
     crumbs = [("Products", "products/"), ("SafeMind", path)]
-    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo&interest=safemind")}">Request a demo {icon("arrow")}</a><a class="btn btn-ghost" href="#pricing">See pricing</a>'
+    btns = f'<a class="btn btn-primary" href="#poc">Request a SafeMind POC {icon("arrow")}</a><a class="btn btn-ghost" href="#pricing">See pricing</a>'
     side = '''<h3>Demo inbox</h3>
 <div style="border:1px solid var(--line-2);border-radius:12px;padding:16px;background:var(--bg-2)">
 <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.72rem;color:var(--text-3)"><span>IT Helpdesk</span><span>09:41</span></div>
@@ -28,6 +28,26 @@ def safemind():
 </div><p class="note">This email landed in your inbox. What do you do?</p>'''
     hero = page_hero(d, crumbs, "SafeMind · Security awareness SaaS", "Your firewall can't stop a click.",
                      "Build real defensive reflexes across your workforce with microlearning, realistic phishing simulations and tips delivered in Microsoft Teams and Slack.", btns, side)
+    hero = hero.replace('<span class="eyebrow ">SafeMind', '<a class="hero-offer" href="#poc"><b>POC</b> Pilot SafeMind with your own team →</a><br><span class="eyebrow ">SafeMind', 1)
+    sm_form = lead_form("safemind-poc", "Proof of Concept (POC) request", "SafeMind", "Request a SafeMind POC",
+                        "Tell us about your organization and we'll scope a proof of concept.", "Request a SafeMind POC",
+                        "Thank you, your SafeMind POC request has been received.",
+                        [("Number of employees", "emp", ["25–100", "101–500", "501–1,000", "1,001–5,000", "5,000+"]),
+                         ("Collaboration platform", "collab", ["Microsoft Teams", "Slack", "Both", "Neither"])])
+    sm_poc = f"""<section class="section" id="poc"><div class="container"><div class="offer">
+<div class="reveal"><span class="badge">{icon("graduation")} Proof of Concept</span>
+<h2>See SafeMind work with your own people.</h2>
+<p class="lead">Arrange a SafeMind Proof of Concept (POC) and evaluate the platform in your environment before you commit.</p>
+<ol class="steps-mini">
+<li><span><strong>Experience the platform</strong>Explore the learner and administrator experience first-hand.</span></li>
+<li><span><strong>Explore awareness capabilities</strong>Try microlearning, phishing simulations and Teams/Slack tips.</span></li>
+<li><span><strong>Evaluate fit</strong>Assess features, reporting and suitability for your organization.</span></li>
+<li><span><strong>Build security culture</strong>Understand how SafeMind supports employee awareness and a stronger security culture.</span></li>
+</ol>
+<div class="trust-row"><span>{icon("check")}Guided by our team</span><span>{icon("check")}Your users, your scenarios</span><span>{icon("check")}No long-term commitment</span></div>
+</div>
+{sm_form}
+</div></div></section>"""
     stats = '''<div class="stats reveal">
 <div class="stat"><strong class="text-red">74%</strong><span>of breaches involved a human element, including phishing clicks, weak or stolen passwords and misconfigured systems.</span><cite>Verizon DBIR 2023</cite></div>
 <div class="stat"><strong class="text-red">41%</strong><span>of cybersecurity incidents originated from phishing, the most common attack method.</span><cite>IBM Security X-Force 2023</cite></div>
@@ -52,6 +72,7 @@ def safemind():
 <div><strong data-n="04">Repeat</strong><p>Track progress and keep improving over time.</p></div>
 </div></div></section>
 
+{sm_poc}
 <section class="section"><div class="container">
 {section_head("Platform capabilities", "Everything you need to run an awareness program.")}
 <div class="grid grid-3">
@@ -125,7 +146,7 @@ def safemind():
 <div style="height:20px"></div>
 {checks(["Organizations with over 5,000 users receive a customized quotation", "10% discount for 3-year contracts", "Onboarding support included", "Add your own awareness content, tailored to your policies and regulations"])}
 </div></div></div></section>
-''' + other_products(d, "safemind") + cta_band(d, "Find out who would click before an attacker does.", "Tell us about your organization and we'll prepare a tailored SafeMind demo and proposal.", ("Request a SafeMind demo", "contact/?type=demo&interest=safemind"))
+''' + other_products(d, "safemind") + cta_band(d, "Find out who would click before an attacker does.", "Arrange a SafeMind Proof of Concept and see how your workforce responds, before you commit.", ("Request a SafeMind POC", "contact/?type=poc&interest=safemind"), ("See pricing", "products/safemind/#pricing")) + sticky_cta("SafeMind: pilot it with your own team", "Request a SafeMind POC", "#poc")
     desc = "SafeMind is a cybersecurity awareness SaaS platform: 100+ microlearning lessons, unlimited realistic phishing simulations, AI-powered learning journeys, reporting, and tips in Microsoft Teams and Slack."
     offers = {"@type": "AggregateOffer", "priceCurrency": "USD", "lowPrice": "1.80", "highPrice": "3.40", "description": "Per user per month, 12-month commitment"}
     return path, page(d, path, "SafeMind: Security Awareness Training SaaS", desc, body, "sp",
@@ -137,13 +158,33 @@ def grc():
     d = 2
     path = "products/xploit-grc/"
     crumbs = [("Products", "products/"), ("Xploit GRC", path)]
-    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo&interest=xploit-grc")}">Request a demo {icon("arrow")}</a><a class="btn btn-ghost" href="#features">Discover features</a>'
+    btns = f'<a class="btn btn-primary" href="#poc">Request a GRC POC {icon("arrow")}</a><a class="btn btn-ghost" href="#features">Discover features</a>'
     side = f'''<h3>At a glance</h3>
 <div class="kpi-row" style="margin-top:6px"><div><strong>38+</strong><span>frameworks &amp; regulations</span></div><div><strong>80</strong><span>security checklists</span></div></div>
 <div class="kpi-row" style="margin-top:18px"><div><strong>IT + OT</strong><span>one connected register</span></div><div><strong>0</strong><span>code to add a framework</span></div></div>
 <div style="height:18px"></div>{chips(["SaaS", "On-premises", "Tenant-isolated", "SSO & audit trail"], "red")}'''
     hero = page_hero(d, crumbs, "Xploit GRC · Governance, risk &amp; compliance", "Govern risk. Ensure compliance. Stay secure.",
                      "A smarter, simpler way to manage cybersecurity governance, risk, compliance and security frameworks from one centralized platform, available as SaaS or deployed on-premises.", btns, side)
+    hero = hero.replace('<span class="eyebrow ">Xploit GRC', '<a class="hero-offer" href="#poc"><b>POC</b> Evaluate Xploit GRC on your own program →</a><br><span class="eyebrow ">Xploit GRC', 1)
+    grc_form = lead_form("grc-poc", "Proof of Concept (POC) request", "Xploit GRC", "Request a GRC POC",
+                         "Tell us about your program and we'll prepare a proof of concept.", "Request a GRC POC",
+                         "Thank you, your Xploit GRC POC request has been received.",
+                         [("Preferred deployment", "dep", ["SaaS", "On-premises", "Not sure yet"]),
+                          ("Frameworks of interest", "fw", None)])
+    grc_poc = f"""<section class="section" id="poc"><div class="container"><div class="offer">
+<div class="reveal"><span class="badge">{icon("layers")} Proof of Concept</span>
+<h2>Evaluate Xploit GRC on your own program.</h2>
+<p class="lead">Arrange a Proof of Concept (POC) and assess how Xploit GRC supports your governance, risk and compliance requirements, with your frameworks and your data.</p>
+<ol class="steps-mini">
+<li><span><strong>Explore the dashboard</strong>Walk through the CISO dashboard, registers and day-to-day functionality.</span></li>
+<li><span><strong>Evaluate risk &amp; compliance</strong>Score risks, run compliance assessments and review gaps.</span></li>
+<li><span><strong>Review frameworks</strong>Browse the 38+ standards in the library, or import your own.</span></li>
+<li><span><strong>Try evidence &amp; remediation</strong>Attach evidence once, reuse it, and track remediation to closure.</span></li>
+</ol>
+<div class="trust-row"><span>{icon("check")}SaaS or on-premises</span><span>{icon("check")}Your frameworks</span><span>{icon("check")}Guided by GRC practitioners</span></div>
+</div>
+{grc_form}
+</div></div></section>"""
     tour = [
         ("grc-compliance-assessments", "Compliance assessments", "Assess every requirement in one workspace.", "Inline status buttons, evidence reuse, owners and gaps, with live compliance scoring, focus mode and one-click tasks from gaps.", ["Readiness score per framework", "Evidence linked once, reused everywhere", "PDF & Excel reports"]),
         ("grc-risk-scoring", "Risk scoring", "Scoring your board can actually read.", "Click the matrix to set inherent, residual and target risk. Every result reads like L 4 × I 5 = 20 → Critical, mapped to your appetite.", ["3×3, 4×4 or 5×5 methodologies", "Risk acceptance with approvals", "Linked assets, controls and vendors"]),
@@ -192,11 +233,11 @@ def grc():
             ("Consultancy / vCISO", "Many clients, one login", ["Separate, isolated workspace per client", "Reuse your checklists and frameworks", "Standard reports across every engagement", "Switch clients in one click"], "Any framework"),
             ("Privacy team", "UAE and Saudi PDPL in practice", ["Build the RoPA for every processing activity", "Screen and approve DPIAs", "Answer data subject requests on time", "Log breaches against the 72-hour clock"], "UAE PDPL · Saudi PDPL · GDPR")]
     use_html = "".join(f'<div class="card reveal"><span class="eyebrow" style="margin-bottom:12px">{esc(a)}</span><h3>{esc(b)}</h3><div style="height:8px"></div>{checks([esc(x) for x in li])}<p class="note">{esc(t)}</p></div>' for a, b, li, t in uses)
-    plans = [("Starter", "Up to 5 users", "4,900", "≈ AED 18,000 / year", "For SMBs and a first ISO 27001 or NCA ECC project", False, "Get started"),
-             ("Growth", "Up to 15 users", "9,900", "≈ AED 36,400 / year", "For mid-size teams running multiple frameworks", True, "Get started"),
-             ("Business", "Up to 40 users", "19,900", "≈ AED 73,100 / year", "For multi-site organizations with IT and OT teams", False, "Get started"),
+    plans = [("Starter", "Up to 5 users", "4,900", "≈ AED 18,000 / year", "For SMBs and a first ISO 27001 or NCA ECC project", False, "Request a POC"),
+             ("Growth", "Up to 15 users", "9,900", "≈ AED 36,400 / year", "For mid-size teams running multiple frameworks", True, "Request a POC"),
+             ("Business", "Up to 40 users", "19,900", "≈ AED 73,100 / year", "For multi-site organizations with IT and OT teams", False, "Request a POC"),
              ("Enterprise", "Up to 100 users", "34,900", "≈ AED 128,200 / year", "For groups, utilities and critical infrastructure. 100+ users: $250 per extra user", False, "Contact sales")]
-    plan_html = "".join(f'<div class="plan reveal {"popular" if pop else ""}">{"<span class=pop>MOST POPULAR</span>" if pop else ""}<h3>{n}</h3><span class="users">{u}</span><div class="price">${p}<small> / year</small></div><span class="aed">{a}</span><p>{t}</p><a class="btn {"btn-primary" if pop else "btn-ghost"}" href="{url(d, "contact/?type=sales&interest=xploit-grc")}">{c}</a></div>' for n, u, p, a, t, pop, c in plans)
+    plan_html = "".join(f'<div class="plan reveal {"popular" if pop else ""}">{"<span class=pop>MOST POPULAR</span>" if pop else ""}<h3>{n}</h3><span class="users">{u}</span><div class="price">${p}<small> / year</small></div><span class="aed">{a}</span><p>{t}</p><a class="btn {"btn-primary" if pop else "btn-ghost"}" href="{url(d, "contact/?type=poc&interest=xploit-grc")}">{c}</a></div>' for n, u, p, a, t, pop, c in plans)
 
     body = hero + f'''
 <section class="section"><div class="container">
@@ -212,6 +253,7 @@ def grc():
 <div style="margin-top:56px">{shot(d, "grc-dashboard", "Xploit GRC CISO dashboard with posture index, compliance progress by framework and risk exposure", "Xploit GRC, CISO dashboard. Real screens, no mock-ups.", w=1100, h=687)}</div>
 </div></section>
 
+{grc_poc}
 <section class="section section-alt"><div class="container">
 {section_head("Deployment", "Your platform, your way.", "Choose the deployment model that fits your security, data-residency and operational requirements. Every option runs the same full platform.")}
 <div class="grid grid-2">
@@ -296,7 +338,7 @@ def grc():
 </div>
 <p class="note">Prices in USD, billed annually, excluding VAT. AED amounts are approximate.</p>
 </div></section>
-''' + other_products(d, "xploit-grc") + cta_band(d, "Take control of your cybersecurity governance.", "Bring your risks, controls, policies, frameworks and compliance activities together with Xploit GRC. Book a live demo or start a 14-day trial.", ("Request a product demo", "contact/?type=demo&interest=xploit-grc"))
+''' + other_products(d, "xploit-grc") + cta_band(d, "Take control of your cybersecurity governance.", "Arrange a Proof of Concept and see how Xploit GRC brings your risks, controls, policies, frameworks and evidence together.", ("Request a GRC POC", "contact/?type=poc&interest=xploit-grc"), ("See pricing", "products/xploit-grc/#pricing")) + sticky_cta("Xploit GRC: evaluate it on your own program", "Request a GRC POC", "#poc")
     desc = "Xploit GRC is cybersecurity GRC software, available as SaaS or on-premises: risk registers, compliance and control assessments, 38+ frameworks, audits, evidence, IT/OT assets, policies and executive dashboards."
     offers = {"@type": "AggregateOffer", "priceCurrency": "USD", "lowPrice": "4900", "highPrice": "34900", "description": "Annual subscription by number of editing users"}
     return path, page(d, path, "Xploit GRC: GRC Software, SaaS & On-Prem", desc, body, "sp",
@@ -464,107 +506,12 @@ def scada():
                       keywords="SCADA Simulator, OT cyber range, ICS training, SCADA security training, PLC training, OT cybersecurity testing, industrial cybersecurity")
 
 
-# ---------------------------------------------------------------------------
-def xfsa():
-    d = 2
-    path = "products/firewall-security-analyzer/"
-    crumbs = [("Products", "products/"), ("Xploit Firewall Security Analyzer", path)]
-    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo&interest=firewall-security-analyzer")}">Request a demo {icon("arrow")}</a><a class="btn btn-ghost" href="{url(d, "contact/?type=sales&interest=firewall-security-analyzer")}">Book a firewall assessment</a>'
-    side = f"""<h3>Sample assessment</h3>
-<div class="kpi-row" style="margin-top:4px"><div><strong class="text-red">10.0</strong><span>risk score / 10</span></div><div><strong>48</strong><span>findings</span></div><div><strong class="text-red">9 / 8</strong><span>critical / high</span></div></div>
-<div style="height:16px"></div>{chips(["NIST SP 800-53 Rev. 5", "PCI DSS 4.0.1", "Xploit Firewall Baseline", "Vendor hardening"], "red")}
-<p class="note">From a sample report on a FortiGate edge firewall.</p>"""
-    hero = page_hero(d, crumbs, "Xploit Firewall Security Analyzer · XFSA", "Secure your network. Validate your defenses. Stay compliant.",
-                     "Automated, evidence-based firewall configuration audits. XFSA reads your firewall's configuration, finds vulnerable firmware, risky rules and hardening gaps, scores compliance, and tells you exactly how to fix each issue.", btns, side)
-    domains = [("key", "Authentication &amp; administration", "Default and excess admin accounts, MFA, password and lockout policy, trusted hosts, banners, LDAP over TLS."),
-               ("network", "Network security &amp; firewall policies", "Any-any rules, insecure services, untrusted inbound access, disabled or undocumented rules, unlogged denies."),
-               ("lock", "VPN &amp; cryptography", "Weak IPsec ciphers, integrity algorithms and DH groups, IKEv1, legacy TLS on SSL VPN, VPN without MFA."),
-               ("activity", "Monitoring &amp; logging", "Remote log forwarding, logging on rules, authenticated NTP, SNMP v1/v2c and default communities."),
-               ("eye", "Security inspection", "IPS, anti-malware, web filtering, application control and DNS security on internet-bound and published traffic."),
-               ("server", "Infrastructure &amp; resilience", "Exposed management planes, HA, routing protocol authentication and vendor-specific hardening settings."),
-               ("bug", "Vulnerabilities", "Running firmware checked against known CVEs with affected ranges, CVSS scores and fixed releases.")]
-    dom_html = "".join(card(ic, t, x) for ic, t, x in domains)
-    body = hero + f"""
-<section class="section"><div class="container">
-{section_head("Why XFSA", "Firewalls drift. Attackers notice first.", "Rules pile up, temporary access becomes permanent, firmware falls behind and management interfaces end up on the internet. XFSA turns a configuration export into a clear, prioritized and defensible picture of your firewall's security posture.")}
-<div class="grid grid-3">
-{card("search", "Full-configuration coverage", "Every rule, object and system setting is evaluated, not a sample. Sections the parser can't read are reported as Not Assessed, never as compliant.")}
-{card("bug", "Known-vulnerability detection", "Firmware versions are matched to vendor advisories, for example FortiOS SSL VPN CVEs, with CVSS scores and the exact fixed releases.")}
-{card("scale", "Compliance scoring", "Pass, fail, manual-review and N/A results per control, with compliance percentages for each selected standard.")}
-{card("file", "Evidence for every finding", "Each finding quotes the exact configuration lines that triggered it, with the expected secure configuration.")}
-{card("terminal", "Remediation you can apply", "Plain-language remediation plus vendor CLI snippets, technical risk and business impact (confidentiality, integrity, availability).")}
-{card("shield-check", "Deterministic and repeatable", "Findings come from version-controlled rules, not AI guesses, so results are consistent, explainable and audit-friendly.")}
-</div></div></section>
-
-<section class="section section-alt"><div class="container">
-{section_head("What it checks", "Seven security domains, one rule library.", "The Xploit Firewall Security Baseline groups checks into the domains attackers and auditors care about.")}
-<div class="grid grid-4">{dom_html}</div>
-</div></section>
-
-<section class="section"><div class="container"><div class="split">
-<div class="reveal"><span class="eyebrow">Executive summary</span><h2>Risk your leadership understands in one page.</h2>
-<p>Every report opens with an overall risk score, a security score, compliance percentage, findings by severity and domain, the key weaknesses and prioritized recommendations, ready for a CISO, auditor or board pack.</p>
-{checks(["Risk score from 0 to 10 and security score out of 100", "Findings by severity: Critical, High, Medium, Low, Informational", "Top weaknesses with individual risk scores", "Priority recommendations in order of impact"])}</div>
-{shot(d, "xfsa-executive-summary", "XFSA report executive summary showing risk score, findings by severity and key security weaknesses", "Executive summary (sample report)", frame=False, w=1000, h=1089)}
-</div></div></section>
-
-<section class="section section-alt"><div class="container"><div class="split reverse">
-<div class="reveal"><span class="eyebrow">Compliance</span><h2>Mapped to the standards you answer to.</h2>
-<p>Select the standards for each assessment and XFSA maps every rule to their controls, showing pass, fail, manual review, not applicable and not assessed results, plus the list of failed controls.</p>
-{chips(["NIST SP 800-53 Rev. 5", "PCI DSS 4.0.1", "Xploit Firewall Security Baseline 1.0", "Fortinet FortiGate vendor hardening"], "red")}
-<p class="note">Controls are mapped to framework requirements such as NIST AC-17, CM-7 and SI-2, and PCI DSS 1.2.5, 6.3.3 and 10.6.3.</p></div>
-{shot(d, "xfsa-compliance-status", "XFSA compliance status chart and table per standard with failed controls", "Compliance status per standard (sample report)", frame=False, w=1000, h=806)}
-</div></div></section>
-
-<section class="section"><div class="container"><div class="split">
-<div class="reveal"><span class="eyebrow">Detailed findings</span><h2>From finding to fix, with the evidence attached.</h2>
-<p>Each finding includes its severity and risk score, the security domain and rule ID, the configuration evidence, the expected secure configuration, technical risk, business impact, remediation steps with CLI commands, the related CVE and the mapped controls.</p>
-{checks(["Exact configuration lines quoted as evidence", "Vendor CLI remediation snippets", "CVE and CVSS where applicable", "NIST and PCI DSS control mapping"])}</div>
-{shot(d, "xfsa-finding-detail", "XFSA detailed finding with configuration evidence, risk, business impact and remediation", "Detailed finding with remediation (sample report)", frame=False, w=1000, h=962)}
-</div></div></section>
-
-<section class="section section-alt"><div class="container">
-{section_head("How it works", "From configuration file to board-ready report.")}
-<div class="steps">
-<div class="step reveal"><span class="num">01</span><h3>Export</h3><p>Export the firewall configuration and register the device, its criticality and environment.</p></div>
-<div class="step reveal"><span class="num">02</span><h3>Parse</h3><p>XFSA parses the configuration, records its SHA-256 hash and shows which sections it could read.</p></div>
-<div class="step reveal"><span class="num">03</span><h3>Assess</h3><p>Version-controlled rules evaluate the configuration against the standards you select.</p></div>
-<div class="step reveal"><span class="num">04</span><h3>Report</h3><p>Download a branded report with scores, compliance, findings and remediation.</p></div>
-</div></div></section>
-
-<section class="section"><div class="container"><div class="split">
-<div class="reveal"><span class="eyebrow">Methodology</span><h2>Transparent scoring you can defend.</h2>
-<p>Risk scores combine each rule's base severity with exposure (reachability from untrusted zones), device criticality and environment. CVSS is used as a floor for known vulnerabilities.</p>
-<div class="table-wrap" style="margin-top:20px"><table class="data"><caption class="sr-only">XFSA severity bands</caption><thead><tr><th scope="col">Severity</th><th scope="col">Risk score</th></tr></thead><tbody>
-<tr><td>Critical</td><td>≥ 9.0</td></tr><tr><td>High</td><td>≥ 7.0</td></tr><tr><td>Medium</td><td>≥ 4.0</td></tr><tr><td>Low</td><td>&gt; 0</td></tr></tbody></table></div></div>
-<div class="reveal"><div class="grid" style="gap:14px">
-{card("check", "No AI-generated findings", "No AI service generates findings or evidence. Every result traces back to a specific rule and configuration line.")}
-{card("eye", "Honest coverage", "Controls that can't be determined from configuration are marked Manual Review; missing sections are Not Assessed.")}
-{card("fingerprint", "Traceable input", "The analyzed file is identified by its SHA-256 hash, so every report is tied to an exact configuration.")}
-</div></div>
-</div></div></section>
-
-<section class="section section-alt"><div class="container">
-{section_head("Who it's for", "Built for teams that own or audit firewalls.")}
-<div class="grid grid-4">
-{card("shield", "Security teams", "Continuously validate perimeter and internal firewalls against your baseline.")}
-{card("clipboard", "Auditors &amp; GRC", "Evidence-backed results for PCI DSS, NIST and internal audits.")}
-{card("briefcase", "Consultants &amp; MSSPs", "Deliver consistent, branded firewall assessments across clients.")}
-{card("factory", "Utilities &amp; industry", "Verify the firewalls that separate corporate IT from OT networks.")}
-</div>
-<p class="note">Vendor support: Fortinet FortiGate configurations are fully supported today. Contact us about other firewall platforms. Prefer a done-for-you review? Our <a class="text-red" href="{url(d, "services/security-assessments-audits/")}">security assessments</a> team can run XFSA for you.</p>
-</div></section>
-""" + other_products(d, "firewall-security-analyzer") + cta_band(d, "Find the gaps in your firewall before attackers do.", "Book a demo of XFSA or send us a configuration for a confidential firewall security assessment.", ("Request a demo", "contact/?type=demo&interest=firewall-security-analyzer"), ("Book an assessment", "contact/?type=sales&interest=firewall-security-analyzer"))
-    desc = "Xploit Firewall Security Analyzer (XFSA) audits firewall configurations for CVEs, risky rules and hardening gaps, scores compliance with NIST SP 800-53 and PCI DSS 4.0.1, and reports evidence and remediation."
-    return path, page(d, path, "Xploit Firewall Security Analyzer (XFSA)", desc, body, "sp",
-                      prod_ld("Xploit Firewall Security Analyzer", desc, path, "SecurityApplication"), crumbs,
-                      keywords="firewall security analyzer, firewall configuration audit, firewall compliance, FortiGate audit, firewall rule review, PCI DSS firewall, NIST 800-53 firewall")
 
 def products_hub():
     d = 1
     path = "products/"
     crumbs = [("Products", path)]
-    btns = f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo")}">Request a demo {icon("arrow")}</a><a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Try the free OT range {icon("external")}</a>'
+    btns = f'<a class="btn btn-primary" href="{url(d, "products/firewall-security-analyzer/")}#free-trial">XFSA Free Trial {icon("arrow")}</a><a class="btn btn-ghost" href="{url(d, "contact/?type=poc")}">Request a POC</a>'
     hero = page_hero(d, crumbs, "Cybersecurity products", "Platforms that make security stick.",
                      "Commercial SaaS and practical industrial cybersecurity solutions, built by the same practitioners who deliver our services.", btns,
                      f'<h3>Portfolio</h3>{checks(["SafeMind: awareness SaaS", "Xploit GRC: SaaS or on-premises", "Firewall Security Analyzer: firewall audits", "SCADA Simulator: OT awareness & testing", "OT Attack Scenarios: free"], "cyan")}', ot=True, eyebrow_cyan=True)
@@ -578,13 +525,17 @@ def products_hub():
     out = ""
     for i, (s, n, sub, t, img, w, h) in enumerate(blocks):
         vis = shot(d, img, f"{n} product screen", None, frame=(img and img.startswith(("grc", "safemind"))), w=w, h=h) if img else f'<div class="grid grid-2 reveal"><div class="unit"><div class="meta"><span>UNIT-02 · REMOTE ACCESS</span><span>9 MIN</span></div><h3>The Vendor Who Called Twice</h3></div><div class="unit"><div class="meta"><span>UNIT-08 · ACCESS CONTROL</span><span>8 MIN</span></div><h3>Default Passwords Expose Critical Systems</h3></div><div class="unit"><div class="meta"><span>UNIT-09 · PHYSICAL</span><span>8 MIN</span></div><h3>The Fake Maintenance Technician</h3></div><div class="unit"><div class="meta"><span>UNIT-10 · REMOTE ACCESS</span><span>9 MIN</span></div><h3>Compromised Vendor Remote Access</h3></div></div>'
-        primary = f'<a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Explore Free OT Attack Scenarios {icon("external")}</a>' if s == "ot-attack-scenarios" else f'<a class="btn btn-primary" href="{url(d, "contact/?type=demo&interest="+s)}">Request a demo</a>'
+        offers = {"firewall-security-analyzer": ("Request a Free Trial", url(d, "products/firewall-security-analyzer/") + "#free-trial"),
+                  "safemind": ("Request a SafeMind POC", url(d, "products/safemind/") + "#poc"),
+                  "xploit-grc": ("Request a GRC POC", url(d, "products/xploit-grc/") + "#poc"),
+                  "scada-simulator": ("Request a demo", url(d, "contact/?type=demo&interest=scada-simulator"))}
+        primary = f'<a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Explore Free OT Attack Scenarios {icon("external")}</a>' if s == "ot-attack-scenarios" else f'<a class="btn btn-primary" href="{offers[s][1]}">{offers[s][0]}</a>'
         out += f'''<div class="split {"reverse" if i % 2 else ""}" style="margin-bottom:96px"><div class="reveal"><span class="eyebrow {"cyan" if s in ("scada-simulator","ot-attack-scenarios") else ""}">{sub}</span><h2>{n}</h2><p class="lead">{t}</p><div class="btn-row"><a class="btn btn-ghost" href="{url(d, "products/"+s+"/")}">Learn more {icon("arrow")}</a>{primary}</div></div>{vis}</div>'''
-    body = hero + f'<section class="section"><div class="container">{out}</div></section>' + cta_band(d, "Want to see a platform live?", "Book a guided demo of SafeMind, Xploit GRC, the Firewall Security Analyzer or the SCADA Simulator with our team.", ("Request a product demo", "contact/?type=demo"))
+    body = hero + f'<section class="section"><div class="container">{out}</div></section>' + cta_band(d, "Want to evaluate a platform?", "Request a free XFSA trial, a SafeMind or Xploit GRC Proof of Concept, or a SCADA Simulator demo.", ("Contact Xploit", "contact/?type=poc"))
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Xploit Security products",
           "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": abs_url(f"products/{s}/")} for i, (s, n, _, _, _) in enumerate(PRODUCTS)]}
     return path, page(d, path, "Products: SafeMind, Xploit GRC, SCADA Simulator",
                       "Xploit Security products: SafeMind awareness SaaS, Xploit GRC, Xploit Firewall Security Analyzer, the SCADA Simulator OT cyber range, and free OT attack scenarios.",
                       body, "sp", ld, crumbs, keywords="Cybersecurity GRC Software, Cybersecurity Awareness SaaS, SCADA Simulator, OT cyber range, security products")
 
-ALL = [products_hub, safemind, grc, xfsa, scenarios, scada]
+ALL = [products_hub, safemind, grc, scenarios, scada]

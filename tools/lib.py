@@ -153,8 +153,13 @@ def header(depth, active):
               <div class="mega-col"><h4><a href="{r("services/")}">Cybersecurity Services →</a></h4><ul>{svc}</ul></div>
               <div class="mega-col"><h4><a href="{r("products/")}">Cybersecurity Products →</a></h4><ul>{prd}</ul></div>
               <div class="mega-feature">
-                <div><span class="eyebrow cyan">Free resource</span><h3>Defend the plant. One decision at a time.</h3><p>Ten OT/ICS incident scenarios based on real attack patterns. Free, in your browser.</p></div>
-                <a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Explore Free OT Attack Scenarios {icon("external")}</a>
+                <div><span class="eyebrow">Try before you buy</span><h3>Free trial &amp; POCs</h3>
+                <ul class="check-list" style="margin-top:12px">
+                  <li><a href="{r("products/firewall-security-analyzer/")}#free-trial">XFSA: Request a Free Trial</a></li>
+                  <li><a href="{r("products/safemind/")}#poc">SafeMind: Request a POC</a></li>
+                  <li><a href="{r("products/xploit-grc/")}#poc">Xploit GRC: Request a POC</a></li>
+                </ul></div>
+                <a class="btn btn-cyan" href="{SITE["range"]}" target="_blank" rel="noopener">Free OT Attack Scenarios {icon("external")}</a>
               </div>
             </div>
           </div>
@@ -164,7 +169,7 @@ def header(depth, active):
         <li><a class="nav-link" href="{r("contact/")}"{cur("contact")}>Contact</a></li>
       </ul>
       <a class="nav-academy" href="{SITE["academy"]}" target="_blank" rel="noopener" title="Cybersecurity training at Xploit Academy">Training → Xploit Academy</a>
-      <a class="btn btn-primary nav-cta" href="{r("contact/?type=consulting")}">Book a Consultation</a>
+      <a class="btn btn-primary nav-cta" href="{r("contact/?type=consulting")}">Request a Consultation</a>
     </nav>
   </div>
 </header>'''
@@ -191,8 +196,10 @@ def footer(depth):
         <li><a href="{r("about/")}">About</a></li>
         <li><a href="{r("faq/")}">FAQ</a></li>
         <li><a href="{r("contact/")}">Contact</a></li>
-        <li><a href="{r("contact/?type=demo")}">Request a demo</a></li>
-        <li><a href="{r("contact/?type=consulting")}">Consulting inquiry</a></li>
+        <li><a href="{r("products/firewall-security-analyzer/")}#free-trial">XFSA free trial</a></li>
+        <li><a href="{r("products/safemind/")}#poc">SafeMind POC</a></li>
+        <li><a href="{r("products/xploit-grc/")}#poc">Xploit GRC POC</a></li>
+        <li><a href="{r("contact/?type=consulting")}">Request a Consultation</a></li>
         <li><a href="{SITE["academy"]}" target="_blank" rel="noopener">Xploit Academy</a></li>
       </ul></div>
     </div>
@@ -323,3 +330,51 @@ def shot(depth, name, alt, caption=None, frame=True, w=None, h=None, eager=False
 
 def section_head(eyebrow, title, lead="", center=False, cyan=False):
     return f'<div class="section-head {"center" if center else ""} reveal"><span class="eyebrow {"cyan" if cyan else ""}">{eyebrow}</span><h2>{title}</h2>{f"<p class=lead>{lead}</p>" if lead else ""}</div>'
+
+# ---------------------------------------------------------------- lead generation
+COUNTRIES = ["United Arab Emirates", "Saudi Arabia", "Qatar", "Kuwait", "Bahrain", "Oman", "Egypt", "Jordan", "Lebanon", "Iraq", "Morocco", "Türkiye",
+             "India", "Pakistan", "United Kingdom", "United States", "Canada", "Australia", "Germany", "France", "Netherlands", "Singapore", "Other"]
+
+def _hidden(subject, inquiry, interest):
+    return (f'<input type="hidden" name="_subject" value="{esc(subject)}">'
+            '<input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">'
+            f'<input type="hidden" name="Inquiry type" value="{esc(inquiry)}">'
+            + (f'<input type="hidden" name="Interest" value="{esc(interest)}">' if interest else "")
+            + '<div class="hp" aria-hidden="true"><label>Leave this field empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>')
+
+def lead_form(fid, inquiry, interest, title, intro, button, success, extra=None):
+    """Compact inline lead form. extra = list of (label, name, [options]) selects or (label, name, None) text inputs."""
+    copts = "".join(f"<option>{c}</option>" for c in COUNTRIES)
+    ex = ""
+    for lab, name, opts in (extra or []):
+        if opts:
+            o = "".join(f"<option>{esc(x)}</option>" for x in opts)
+            ex += f'<div class="field"><label for="{fid}-{name}">{esc(lab)}</label><select id="{fid}-{name}" name="{esc(lab)}"><option value="">Select</option>{o}</select></div>'
+        else:
+            ex += f'<div class="field"><label for="{fid}-{name}">{esc(lab)}</label><input id="{fid}-{name}" name="{esc(lab)}" type="text"></div>'
+    return f'''<div class="lead-card reveal" id="{fid}">
+<h3>{title}</h3><p>{intro}</p>
+<form class="lead-form" data-endpoint="{SITE["form_endpoint"]}" data-success="{esc(success)}" action="{SITE["form_endpoint"].replace("/ajax/", "/")}" method="POST" novalidate>
+{_hidden("New " + inquiry + " — " + interest, inquiry, interest)}
+<div class="form-grid">
+<div class="field"><label for="{fid}-name">Full name <span class="req">*</span></label><input id="{fid}-name" name="Name" type="text" autocomplete="name" required></div>
+<div class="field"><label for="{fid}-email">Business email <span class="req">*</span></label><input id="{fid}-email" name="email" type="email" autocomplete="email" required placeholder="you@company.com"></div>
+<div class="field"><label for="{fid}-company">Company <span class="req">*</span></label><input id="{fid}-company" name="Company" type="text" autocomplete="organization" required></div>
+<div class="field"><label for="{fid}-country">Country <span class="req">*</span></label><select id="{fid}-country" name="Country" required><option value="">Select country</option>{copts}</select></div>
+{ex}
+<div class="field full"><label for="{fid}-msg">Anything we should know?</label><textarea id="{fid}-msg" name="Message" placeholder="Goals, timelines, environment…"></textarea></div>
+<div class="field full"><label class="consent"><input type="checkbox" name="Consent" value="Yes" required> <span>I agree that Xploit Security may contact me about this request.</span></label></div>
+</div>
+<div style="margin-top:16px"><button class="btn btn-primary" type="submit">{button} {icon("arrow")}</button></div>
+<div class="form-status" role="status" aria-live="polite"></div>
+</form></div>'''
+
+def sticky_cta(text, label, href):
+    return f'<div class="sticky-cta" aria-hidden="false"><span>{text}</span><a class="btn btn-primary" href="{href}">{label}</a></div>'
+
+def zshot(depth, name, alt, caption, group, w, h, chip=None, frame=True, cls=""):
+    """Zoomable screenshot (opens in the lightbox gallery `group`)."""
+    chiphtml = f'<span class="ver-chip {chip[0]}">{chip[1]}</span>' if chip else ""
+    img = f'<img src="{url(depth, "assets/img/products/"+name+".webp")}" alt="{esc(alt)}" width="{w}" height="{h}" loading="lazy" decoding="async" data-zoom="{group}">'
+    inner = f'<div class="shot-frame"><div class="bar"><i></i><i></i><i></i></div>{img}</div>' if frame else f'<div class="shot">{img}</div>'
+    return f'<figure class="reveal {cls}">{inner}<figcaption>{chiphtml}{esc(caption)}</figcaption></figure>'

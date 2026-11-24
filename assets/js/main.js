@@ -86,36 +86,50 @@
     readCfg();
   }
 
-  /* ---------- Contact form (FormSubmit AJAX endpoint — works on GitHub Pages) ---------- */
-  var form = document.getElementById("contact-form");
-  if (form) {
-    // Pre-select interest / inquiry type from URL: /contact/?interest=safemind&type=demo
-    var params = new URLSearchParams(window.location.search);
-    var interest = params.get("interest");
-    var sel = form.querySelector("#f-interest");
-    if (interest && sel) {
-      Array.prototype.forEach.call(sel.options, function (o) { if (o.getAttribute("data-key") === interest) sel.value = o.value; });
-    }
-    var typeTabs = document.querySelectorAll("[data-inquiry]");
-    var typeInput = form.querySelector("#f-type");
-    var setType = function (t) {
-      typeTabs.forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-inquiry") === t ? "true" : "false"); });
-      if (typeInput) typeInput.value = t;
-      var subj = form.querySelector("input[name=_subject]");
-      if (subj) subj.value = "New " + t + " — xploit-security.com";
-    };
-    typeTabs.forEach(function (b) { b.addEventListener("click", function () { setType(b.getAttribute("data-inquiry")); }); });
-    var t0 = params.get("type");
-    var map = { demo: "Product demo request", consulting: "Consulting inquiry", sales: "Sales inquiry", general: "General contact" };
-    setType(map[t0] || "Sales inquiry");
+  /* ---------- Lead forms (FormSubmit AJAX endpoint — works on GitHub Pages) ----------
+     Every <form class="lead-form" data-endpoint="..."> is handled here: the full contact form
+     and the inline Free Trial / POC / Consultation forms on product and service pages.        */
+  var INQUIRY = {
+    trial: "Free trial request", poc: "Proof of Concept (POC) request", demo: "Product demo request",
+    consulting: "Consultation request", sales: "Sales inquiry", general: "General inquiry"
+  };
+  var personal = /@(gmail|yahoo|hotmail|outlook|live|icloud|aol|proton|protonmail|gmx|mail|yandex)\./i;
+  var params = new URLSearchParams(window.location.search);
 
-    var status = document.getElementById("form-status");
-    var personal = /@(gmail|yahoo|hotmail|outlook|live|icloud|aol|proton|protonmail|gmx|mail|yandex)\./i;
+  document.querySelectorAll("form.lead-form").forEach(function (form) {
+    var typeInput = form.querySelector("[name='Inquiry type']");
+    var subj = form.querySelector("input[name=_subject]");
+    var sel = form.querySelector("select[name=Interest]");
+    var status = form.querySelector(".form-status");
+    var tabs = form.id === "contact-form" ? document.querySelectorAll("[data-inquiry]") : [];
+
+    function refreshSubject() {
+      if (!subj) return;
+      var what = sel ? sel.value : (form.querySelector("[name=Interest]") || {}).value;
+      subj.value = "New " + (typeInput ? typeInput.value : "inquiry") + (what ? " — " + what : "") + " — xploit-security.com";
+    }
+    function setType(t) {
+      if (typeInput) typeInput.value = t;
+      tabs.forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-inquiry") === t ? "true" : "false"); });
+      refreshSubject();
+    }
+    tabs.forEach(function (b) { b.addEventListener("click", function () { setType(b.getAttribute("data-inquiry")); }); });
+    if (sel) sel.addEventListener("change", refreshSubject);
+
+    // The main contact form reads ?type= and ?interest= from the URL (e.g. /contact/?type=trial&interest=firewall-security-analyzer)
+    if (form.id === "contact-form") {
+      var interest = params.get("interest");
+      if (interest && sel) Array.prototype.forEach.call(sel.options, function (o) { if (o.getAttribute("data-key") === interest) sel.value = o.value; });
+      setType(INQUIRY[params.get("type")] || INQUIRY.sales);
+    } else {
+      refreshSubject();
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       status.className = "form-status"; status.textContent = "";
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      var email = form.querySelector("#f-email").value;
+      var email = form.querySelector("input[type=email]").value;
       if (personal.test(email) && !form.dataset.warned) {
         form.dataset.warned = "1";
         status.className = "form-status err";
@@ -129,8 +143,10 @@
       }
       var btn = form.querySelector("button[type=submit]");
       btn.disabled = true; var label = btn.innerHTML; btn.textContent = "Sending…";
+      refreshSubject();
       var data = {};
       new FormData(form).forEach(function (v, k) { data[k] = v; });
+      data["Page"] = document.title;
       fetch(form.getAttribute("data-endpoint"), {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
@@ -138,9 +154,11 @@
       }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
         .then(function (res) {
           if (res.ok && (res.j.success === true || res.j.success === "true")) {
-            var keep = typeInput.value; form.reset(); setType(keep || "Sales inquiry");
+            var keep = typeInput ? typeInput.value : null;
+            form.reset(); if (keep) setType(keep);
             status.className = "form-status ok";
-            status.innerHTML = "Thank you — your inquiry has been sent. Our team will reply from <strong>hello@xploit-security.com</strong>, usually within one business day.";
+            status.innerHTML = (form.getAttribute("data-success") || "Thank you — your request has been sent.") +
+              " Our team will reply from <strong>hello@xploit-security.com</strong>, usually within one business day.";
           } else { var err = new Error((res.j && res.j.message) || "Submission failed"); err.fs = true; throw err; }
         })
         .catch(function (err) {
@@ -152,9 +170,73 @@
           var body = Object.keys(data).filter(function (k) { return k.charAt(0) !== "_"; }).map(function (k) { return k + ": " + data[k]; }).join("\n");
           status.className = "form-status err";
           status.innerHTML = "We couldn't send the form just now. Please email us directly at <a href=\"mailto:hello@xploit-security.com?subject=" +
-            encodeURIComponent("Website inquiry") + "&body=" + encodeURIComponent(body) + "\">hello@xploit-security.com</a> or message us on <a href=\"https://wa.me/14073074965\" target=\"_blank\" rel=\"noopener\">WhatsApp</a>.";
+            encodeURIComponent((typeInput ? typeInput.value : "Website inquiry")) + "&body=" + encodeURIComponent(body) + "\">hello@xploit-security.com</a> or message us on <a href=\"https://wa.me/14073074965\" target=\"_blank\" rel=\"noopener\">WhatsApp</a>.";
         })
         .finally(function () { btn.disabled = false; btn.innerHTML = label; });
     });
+  });
+
+  /* ---------- Screenshot galleries: tabs + lightbox ---------- */
+  document.querySelectorAll("[data-gallery-tabs]").forEach(function (wrap) {
+    var btns = wrap.querySelectorAll("[role=tab]");
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) {
+          var on = x === b; x.setAttribute("aria-selected", on ? "true" : "false");
+          var panel = document.getElementById(x.getAttribute("aria-controls"));
+          if (panel) panel.hidden = !on;
+        });
+      });
+    });
+  });
+  var zoomables = Array.prototype.slice.call(document.querySelectorAll("img[data-zoom]"));
+  if (zoomables.length) {
+    var lb = document.createElement("div");
+    lb.className = "lightbox"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-modal", "true"); lb.setAttribute("aria-label", "Screenshot viewer"); lb.hidden = true;
+    lb.innerHTML = '<button class="lb-close" aria-label="Close">×</button><button class="lb-prev" aria-label="Previous">‹</button><figure><img alt=""><figcaption></figcaption></figure><button class="lb-next" aria-label="Next">›</button>';
+    document.body.appendChild(lb);
+    var lbImg = lb.querySelector("img"), lbCap = lb.querySelector("figcaption"), idx = 0, set = [], lastFocus;
+    function show(i) {
+      idx = (i + set.length) % set.length; var im = set[idx];
+      lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt;
+      var fc = im.closest("figure") && im.closest("figure").querySelector("figcaption");
+      if (fc) { var c = fc.cloneNode(true); c.querySelectorAll(".ver-chip").forEach(function (x) { x.remove(); }); lbCap.textContent = c.textContent; } else { lbCap.textContent = im.alt; }
+    }
+    function open(im) {
+      var group = im.getAttribute("data-zoom");
+      set = zoomables.filter(function (x) { return x.getAttribute("data-zoom") === group && x.offsetParent !== null; });
+      if (!set.length) set = [im];
+      lastFocus = document.activeElement; lb.hidden = false; document.body.classList.add("nav-open");
+      show(set.indexOf(im)); lb.querySelector(".lb-close").focus();
+    }
+    function close() { lb.hidden = true; document.body.classList.remove("nav-open"); if (lastFocus) lastFocus.focus(); }
+    zoomables.forEach(function (im) {
+      im.tabIndex = 0; im.setAttribute("role", "button"); im.setAttribute("aria-label", "Enlarge: " + im.alt);
+      im.addEventListener("click", function () { open(im); });
+      im.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(im); } });
+    });
+    lb.querySelector(".lb-close").addEventListener("click", close);
+    lb.querySelector(".lb-prev").addEventListener("click", function () { show(idx - 1); });
+    lb.querySelector(".lb-next").addEventListener("click", function () { show(idx + 1); });
+    lb.addEventListener("click", function (e) { if (e.target === lb) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (lb.hidden) return;
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft") show(idx - 1);
+      if (e.key === "ArrowRight") show(idx + 1);
+    });
+  }
+
+  /* ---------- Sticky product CTA bar (shows after the hero scrolls away) ---------- */
+  var sticky = document.querySelector(".sticky-cta");
+  var heroEl = document.querySelector(".page-hero");
+  if (sticky && heroEl && "IntersectionObserver" in window) {
+    var targetSel = (sticky.querySelector("a") || {}).getAttribute ? sticky.querySelector("a").getAttribute("href") : null;
+    var target = targetSel && targetSel.charAt(0) === "#" ? document.querySelector(targetSel) : null;
+    var footerEl = document.querySelector(".site-footer");
+    var vis = { hero: true, target: false, footer: false };
+    var upd = function () { sticky.classList.toggle("show", !vis.hero && !vis.target && !vis.footer); };
+    var watch = function (el, key) { if (el) new IntersectionObserver(function (en) { vis[key] = en[0].isIntersecting; upd(); }).observe(el); };
+    watch(heroEl, "hero"); watch(target, "target"); watch(footerEl, "footer");
   }
 })();

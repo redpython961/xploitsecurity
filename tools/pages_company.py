@@ -90,7 +90,8 @@ FAQ = [
     ("Products", "layers", "products", [
         ("What is SafeMind?", "<p><a href=\"../products/safemind/\">SafeMind</a> is a cybersecurity awareness platform that combines 100+ microlearning lessons, unlimited realistic phishing simulations, AI-powered learning journeys, reporting by individual, department or organization, and awareness tips delivered in Microsoft Teams and Slack.</p>"),
         ("What is Xploit GRC?", "<p><a href=\"../products/xploit-grc/\">Xploit GRC</a> is a cybersecurity governance, risk and compliance platform. It centralizes risk registers, compliance and control assessments, policies, audits, findings and corrective actions, IT and OT assets, third-party risk, evidence and executive dashboards, with a library of 38+ frameworks and the ability to import your own.</p>"),
-        ("What is Xploit Firewall Security Analyzer?", "<p><a href=\"../products/firewall-security-analyzer/\">Xploit Firewall Security Analyzer (XFSA)</a> audits firewall configuration exports against a version-controlled rule library. It flags known firmware vulnerabilities (CVEs), over-permissive and risky rules, exposed management, weak VPN cryptography, and logging and inspection gaps. It scores compliance against standards such as NIST SP 800-53, PCI DSS 4.0.1 and vendor hardening guidance, and produces a report with configuration evidence and remediation for every finding. FortiGate is fully supported today; <a href=\"../contact/?type=sales&amp;interest=firewall-security-analyzer\">contact us</a> about other vendors.</p>"),
+        ("What is Xploit Firewall Security Analyzer?", "<p><a href=\"../products/firewall-security-analyzer/\">Xploit Firewall Security Analyzer (XFSA)</a> audits firewall configuration exports against a version-controlled rule library. It flags known firmware vulnerabilities (CVEs), over-permissive and risky rules, exposed management, weak VPN cryptography, and logging and inspection gaps. It scores compliance against standards such as NIST SP 800-53, PCI DSS 4.0.1 and vendor hardening guidance, and produces a report with configuration evidence and remediation for every finding. XFSA is available as a cloud SaaS or as a desktop application installed on your own infrastructure. FortiGate is fully supported today; <a href=\"../contact/?type=sales&amp;interest=firewall-security-analyzer\">contact us</a> about other vendors.</p>"),
+        ("Can I try your products before buying?", "<p>Yes. You can request a <a href=\"../products/firewall-security-analyzer/#free-trial\">free trial of XFSA</a> (SaaS or Desktop), and a guided Proof of Concept (POC) for <a href=\"../products/safemind/#poc\">SafeMind</a> or <a href=\"../products/xploit-grc/#poc\">Xploit GRC</a>. You can evaluate each platform in your own environment before making a purchasing decision.</p>"),
         ("Can Xploit GRC be hosted on-premises?", "<p>Yes. Xploit GRC is available as a tenant-isolated SaaS platform, with optional KSA or UAE data residency and dedicated hosting, and it can also be deployed on-premises in your own environment. <a href=\"../contact/?type=sales&amp;interest=xploit-grc\">Contact sales</a> to discuss on-premises licensing.</p>"),
         ("Is SafeMind available as SaaS?", "<p>Yes. SafeMind is a cloud-native SaaS platform running on AWS with a multi-tenant architecture. Pricing is per user per month on a 12-month commitment, starting at $3.40 for 25 to 50 users and decreasing with volume.</p>"),
         ("What is the SCADA Simulator?", "<p>The <a href=\"../products/scada-simulator/\">SCADA Simulator</a> is a tailor-made OT cyber range with authentic Siemens, ABB, Rockwell or Mitsubishi PLCs connected to Level 0 devices and a miniature replica of your plant. It's used for OT awareness training, testing system changes and rehearsing cyberattacks, with an optional attack-simulation add-on covering the full attack chain.</p>"),
@@ -132,20 +133,21 @@ def contact():
     opt = lambda items: "".join(f'<option data-key="{k}" value="{esc(n)}">{esc(n)}</option>' for k, n in items)
     countries = ["United Arab Emirates", "Saudi Arabia", "Qatar", "Kuwait", "Bahrain", "Oman", "Egypt", "Jordan", "Lebanon", "Iraq", "Morocco", "Türkiye",
                  "India", "Pakistan", "United Kingdom", "United States", "Canada", "Australia", "Germany", "France", "Netherlands", "Singapore", "Other"]
-    copts = "".join(f"<option>{c}</option>" for c in countries)
+    copts = "".join(f"<option>{c}</option>" for c in COUNTRIES)
     body = f'''<section class="page-hero grid-bg"><div class="container">{breadcrumb(d, crumbs)}
 <span class="eyebrow">Contact &amp; sales</span><h1>Let's talk security.</h1>
-<p class="lead">Reach out to discuss consulting, request a product demo or ask a question. Our team replies from <strong>{SITE["email"]}</strong>, usually within one business day.</p></div></section>
+<p class="lead">Request an XFSA free trial, a SafeMind or Xploit GRC proof of concept, or a consultation with our team. Our team replies from <strong>{SITE["email"]}</strong>, usually within one business day.</p></div></section>
 
 <section class="section"><div class="container"><div class="split contact-split">
 <div class="form-card reveal">
 <div class="tabs" role="tablist" aria-label="Inquiry type">
-<button type="button" role="tab" data-inquiry="Sales inquiry" aria-selected="true">Sales inquiry</button>
-<button type="button" role="tab" data-inquiry="Product demo request" aria-selected="false">Product demo</button>
-<button type="button" role="tab" data-inquiry="Consulting inquiry" aria-selected="false">Consulting</button>
-<button type="button" role="tab" data-inquiry="General contact" aria-selected="false">General</button>
+<button type="button" role="tab" data-inquiry="Free trial request" aria-selected="false">Free trial</button>
+<button type="button" role="tab" data-inquiry="Proof of Concept (POC) request" aria-selected="false">POC</button>
+<button type="button" role="tab" data-inquiry="Consultation request" aria-selected="false">Consultation</button>
+<button type="button" role="tab" data-inquiry="Sales inquiry" aria-selected="true">Sales</button>
+<button type="button" role="tab" data-inquiry="General inquiry" aria-selected="false">General</button>
 </div>
-<form id="contact-form" data-endpoint="{SITE["form_endpoint"]}" action="{SITE["form_endpoint"].replace("/ajax/", "/")}" method="POST" novalidate>
+<form id="contact-form" class="lead-form" data-endpoint="{SITE["form_endpoint"]}" data-success="Thank you, your inquiry has been sent." action="{SITE["form_endpoint"].replace("/ajax/", "/")}" method="POST" novalidate>
 <input type="hidden" name="_subject" value="New Sales inquiry — xploit-security.com">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_captcha" value="false">
@@ -171,18 +173,20 @@ def contact():
 <div class="grid reveal" style="gap:14px">
 <a class="contact-tile" href="mailto:{SITE["email"]}"><span class="ico-box">{icon("mail")}</span><div><strong>Sales email</strong><span>{SITE["email"]}</span></div></a>
 <a class="contact-tile" href="{SITE["wa"]}" target="_blank" rel="noopener"><span class="ico-box" style="background:rgba(37,211,102,.1);color:#25d366;border-color:rgba(37,211,102,.3)">{icon("message")}</span><div><strong>WhatsApp</strong><span>{SITE["wa_display"]}, chat with our team</span></div></a>
-<a class="contact-tile" href="{url(d, "contact/?type=demo")}" data-demo><span class="ico-box cyan">{icon("play")}</span><div><strong>Request a product demo</strong><span>SafeMind, Xploit GRC or the SCADA Simulator</span></div></a>
-<a class="contact-tile" href="{url(d, "contact/?type=consulting")}"><span class="ico-box">{icon("briefcase")}</span><div><strong>Consulting inquiry</strong><span>vCISO, compliance, assessments, IT &amp; OT security</span></div></a>
+<a class="contact-tile" href="{url(d, "contact/?type=trial&interest=firewall-security-analyzer")}"><span class="ico-box">{icon("shield-check")}</span><div><strong>XFSA: Request a Free Trial</strong><span>Try the Firewall Security Analyzer, SaaS or desktop</span></div></a>
+<a class="contact-tile" href="{url(d, "contact/?type=poc&interest=safemind")}"><span class="ico-box">{icon("graduation")}</span><div><strong>SafeMind: Request a POC</strong><span>Pilot awareness training and phishing simulations</span></div></a>
+<a class="contact-tile" href="{url(d, "contact/?type=poc&interest=xploit-grc")}"><span class="ico-box">{icon("layers")}</span><div><strong>Xploit GRC: Request a POC</strong><span>Evaluate risk, compliance and evidence workflows</span></div></a>
+<a class="contact-tile" href="{url(d, "contact/?type=consulting")}"><span class="ico-box">{icon("briefcase")}</span><div><strong>Request a Consultation</strong><span>vCISO, compliance, assessments, IT &amp; OT security</span></div></a>
 <div class="contact-tile"><span class="ico-box">{icon("pin")}</span><div><strong>Headquarters</strong><span>Dubai, United Arab Emirates</span></div></div>
 <a class="contact-tile" href="{SITE["academy"]}" target="_blank" rel="noopener"><span class="ico-box">{icon("graduation")}</span><div><strong>Looking for training?</strong><span>Training → Xploit Academy</span></div></a>
 </div>
 </div></div></section>
 <script>
-document.querySelectorAll('.contact-tile[href*="type="]').forEach(function(a){{a.addEventListener('click',function(e){{if(location.pathname.indexOf('/contact')>-1){{e.preventDefault();var t=a.href.indexOf('type=demo')>-1?'Product demo request':'Consulting inquiry';var b=document.querySelector('[data-inquiry="'+t+'"]');if(b)b.click();document.getElementById('f-name').focus();}}}});}});
+document.querySelectorAll('.contact-tile[href*="type="]').forEach(function(a){{a.addEventListener('click',function(e){{e.preventDefault();var u=new URL(a.href);var m={{trial:"Free trial request",poc:"Proof of Concept (POC) request",consulting:"Consultation request"}};var t=m[u.searchParams.get('type')];var b=document.querySelector('[data-inquiry="'+t+'"]');if(b)b.click();var k=u.searchParams.get('interest');var s=document.getElementById('f-interest');if(s){{if(k){{Array.prototype.forEach.call(s.options,function(o){{if(o.getAttribute('data-key')===k)s.value=o.value;}});}}else{{s.value='';}}s.dispatchEvent(new Event('change'));}}document.getElementById('contact-form').scrollIntoView({{behavior:'smooth',block:'start'}});document.getElementById('f-name').focus({{preventScroll:true}});}});}});
 </script>'''
     ld = {"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact Xploit Security", "url": abs_url(path)}
     return path, page(d, path, "Contact Xploit Security: Sales, Demos & Consulting",
-                      "Contact Xploit Security for cybersecurity consulting, vCISO, compliance and IT/OT assessments, or request a demo of SafeMind, Xploit GRC or the SCADA Simulator. Email hello@xploit-security.com or WhatsApp.",
+                      "Contact Xploit Security: request an XFSA free trial, a SafeMind or Xploit GRC proof of concept, or a cybersecurity consultation. Email hello@xploit-security.com or WhatsApp.",
                       body, "contact", ld, crumbs)
 
 def notfound():

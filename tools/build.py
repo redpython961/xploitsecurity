@@ -12,7 +12,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
 from lib import SITE, pfile, abs_url
-import pages_home, pages_services, pages_products, pages_company
+import pages_home, pages_services, pages_products, pages_xfsa, pages_company
 
 def write(rel_path, content):
     out = os.path.join(ROOT, pfile(rel_path))
@@ -24,7 +24,7 @@ def write(rel_path, content):
 def main():
     paths = []
     write("index.html", pages_home.home()); paths.append(("", "1.0"))
-    for mod in (pages_services, pages_products, pages_company):
+    for mod in (pages_services, pages_products, pages_xfsa, pages_company):
         for fn in mod.ALL:
             p, html_ = fn()
             write(p, html_)

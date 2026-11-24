@@ -40,6 +40,7 @@ def home():
 <section class="hero grid-bg">
   <div class="container hero-grid">
     <div>
+      <a class="hero-offer" href="{r("products/firewall-security-analyzer/")}#free-trial"><b>NEW</b> XFSA firewall analyzer: free trial available →</a><br>
       <span class="eyebrow">IT &amp; OT Cybersecurity · Consulting · SaaS</span>
       <h1><span class="line">Securing IT.</span><span class="line">Protecting OT.</span><span class="line grad-text">Enabling Trust.</span></h1>
       <p class="lead">From enterprise cybersecurity consulting and regulatory compliance to industrial OT security and intelligent SaaS platforms, Xploit Security helps organizations identify risks, strengthen defenses, and build cyber resilience.</p>
@@ -136,26 +137,20 @@ def home():
 
 <section class="section">
   <div class="container">
-    {section_head("Featured solutions", "See the work, not just the promise.")}
-    <div class="split">
-      <div class="reveal">
-        <span class="chip red">Xploit GRC</span>
-        <h3 style="font-size:1.8rem;margin-top:16px">Govern risk. Ensure compliance. Stay secure.</h3>
-        <p>Run ISO 27001, NCA ECC, SOC 2, CMMC and IEC 62443 side by side. Link risks to IT and OT assets, attach evidence once and reuse it across every framework, then brief your board with live dashboards.</p>
-        <div class="kpi-row"><div><strong>38+</strong><span>frameworks &amp; regulations</span></div><div><strong>80</strong><span>security checklists</span></div><div><strong>9</strong><span>connected modules</span></div></div>
-        <div class="btn-row" style="margin-top:28px"><a class="btn btn-primary" href="{r("products/xploit-grc/")}">Explore Xploit GRC {icon("arrow")}</a><a class="btn btn-ghost" href="{r("contact/?type=demo&interest=xploit-grc")}">Request a demo</a></div>
-      </div>
-      {shot(d, "grc-dashboard", "Xploit GRC CISO dashboard showing posture index, compliance progress and risk exposure", "Xploit GRC, CISO dashboard (real product screen)", w=1100, h=687)}
-    </div>
-    <div class="divider"></div>
-    <div class="split reverse">
-      <div class="reveal">
-        <span class="chip red">SafeMind</span>
-        <h3 style="font-size:1.8rem;margin-top:16px">Your firewall can't stop a click.</h3>
-        <p>SafeMind builds real defensive reflexes with 100+ microlearning lessons, unlimited realistic phishing campaigns and tips delivered where people already work, in Microsoft Teams and Slack.</p>
-        <div class="btn-row" style="margin-top:24px"><a class="btn btn-primary" href="{r("products/safemind/")}">Discover SafeMind {icon("arrow")}</a></div>
-      </div>
-      {shot(d, "safemind-learner-dashboard", "SafeMind learner dashboard with courses in progress and phishing results", "SafeMind learner dashboard, sample data", w=770, h=852)}
+    {section_head("Try before you buy", "Experience our platforms on your own environment.", "Every Xploit platform can be evaluated before you commit: a free trial of XFSA and a guided Proof of Concept for SafeMind and Xploit GRC.")}
+    <div class="spot">
+      <article class="item reveal"><div class="pic"><img src="{r("assets/img/products/xfsa-executive-summary.webp")}" alt="XFSA firewall assessment report executive summary" width="1000" height="1089" loading="lazy" decoding="async"></div>
+        <div class="body"><span class="offer-tag">Free trial · SaaS or Desktop</span><h3>Xploit Firewall Security Analyzer</h3>
+        <p>Evidence-based firewall configuration audits with CVE detection, risky-rule analysis and NIST / PCI DSS compliance scoring.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="{r("products/firewall-security-analyzer/")}#free-trial">Request a Free Trial</a><a class="btn btn-ghost" href="{r("products/firewall-security-analyzer/")}">Explore</a></div></div></article>
+      <article class="item reveal"><div class="pic"><img src="{r("assets/img/products/safemind-learner-dashboard.webp")}" alt="SafeMind learner dashboard" width="770" height="852" loading="lazy" decoding="async"></div>
+        <div class="body"><span class="offer-tag">Proof of Concept</span><h3>SafeMind</h3>
+        <p>Security awareness SaaS with microlearning, unlimited phishing simulations and tips in Microsoft Teams and Slack.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="{r("products/safemind/")}#poc">Request a SafeMind POC</a><a class="btn btn-ghost" href="{r("products/safemind/")}">Explore</a></div></div></article>
+      <article class="item reveal"><div class="pic"><img src="{r("assets/img/products/grc-dashboard.webp")}" alt="Xploit GRC CISO dashboard" width="1100" height="687" loading="lazy" decoding="async"></div>
+        <div class="body"><span class="offer-tag">Proof of Concept · SaaS or on-premises</span><h3>Xploit GRC</h3>
+        <p>Governance, risk and compliance in one platform: 38+ frameworks, risk registers, audits, evidence and IT/OT assets.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="{r("products/xploit-grc/")}#poc">Request a GRC POC</a><a class="btn btn-ghost" href="{r("products/xploit-grc/")}">Explore</a></div></div></article>
     </div>
     <div class="divider"></div>
     <div class="split">
@@ -189,7 +184,7 @@ def home():
   </div>
 </section>
 
-{cta_band(d, "Let's strengthen your security posture.", "Tell us about your environment, IT, OT or both, and we'll recommend the right mix of services and platforms. Consultations are delivered on-site in Dubai or remotely worldwide.", ("Book a Consultation", "contact/?type=consulting"), ("Request a product demo", "contact/?type=demo"))}
+{cta_band(d, "Let's strengthen your security posture.", "Tell us about your environment, IT, OT or both, and we'll recommend the right mix of services and platforms. Consultations are delivered on-site in Dubai or remotely worldwide.", ("Request a Consultation", "contact/?type=consulting"), ("Contact Xploit", "contact/?type=general"))}
 '''
     ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "Xploit Security", "url": SITE["domain"] + "/", "publisher": {"@id": SITE["domain"] + "/#org"}}
     return page(d, "", "Xploit Security | IT & OT Cybersecurity Consulting & SaaS",

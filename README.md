@@ -131,6 +131,31 @@ After launch:
 
 ---
 
+## 9. Lead generation: trials, POCs and consultations
+
+| Offer | Where | Form sends "Inquiry type" / "Interest" |
+|---|---|---|
+| XFSA Free Trial | `products/firewall-security-analyzer/#free-trial` (+ hero, sticky bar, bottom CTA) | Free trial request / Xploit Firewall Security Analyzer |
+| SafeMind POC | `products/safemind/#poc` | Proof of Concept (POC) request / SafeMind |
+| Xploit GRC POC | `products/xploit-grc/#poc` | Proof of Concept (POC) request / Xploit GRC |
+| Consultation | `#consultation` on every service page | Consultation request / service name |
+| General | `contact/` (tabs: Free trial, POC, Consultation, Sales, General) | chosen type / chosen product or service |
+
+All forms post to the same FormSubmit endpoint. The email subject reads like *"New Free trial request — Xploit Firewall Security Analyzer"*, so you can filter or route inquiries in your mailbox.
+
+## 10. Adding XFSA application screenshots
+
+The XFSA page has a tabbed showcase (SaaS / Desktop / Assessment reports) with a click-to-enlarge lightbox.
+1. Put real screenshots in:
+   - `assets/img/products/xfsa-saas/`
+   - `assets/img/products/xfsa-desktop/`
+2. Name them in display order, e.g. `01-main-dashboard.webp`, `02-firewall-inventory.webp`, `03-configuration-analysis.webp`. The file name becomes the caption. To use custom captions, add a `captions.json` (`{"01-main-dashboard.webp": "Main dashboard and analytics"}`).
+3. Run `python3 tools/build.py`. The SaaS and Desktop tabs appear automatically once a folder has images; empty folders are hidden, so no placeholder is ever shown.
+
+WebP at ~1600 px wide keeps pages fast (PNG/JPG also work).
+
+---
+
 ## 8. Content notes
 
 All service and product content was migrated from the existing Xploit pages (services, SafeMind, Xploit GRC, SCADA Simulator and the free OT Cyber Range). Statistics on the SafeMind page are attributed to their published sources (Verizon DBIR, IBM X-Force, SANS). Customer results are labelled as reported by SafeMind for one client. Client logos come from the existing services page. Review prices before publishing if they have changed.
