@@ -140,7 +140,7 @@ def home():
     {section_head("Try before you buy", "Experience our platforms on your own environment.", "Every Xploit platform can be evaluated before you commit: a free trial of XFSA and a guided Proof of Concept for SafeMind and Xploit GRC.")}
     <div class="spot">
       <article class="item reveal"><div class="pic"><img src="{r("assets/img/products/xfsa-executive-summary.webp")}" alt="XFSA firewall assessment report executive summary" width="1000" height="1089" loading="lazy" decoding="async"></div>
-        <div class="body"><span class="offer-tag">Free trial · SaaS or Desktop</span><h3>Xploit Firewall Security Analyzer</h3>
+        <div class="body"><span class="offer-tag">Free trial · Desktop application</span><h3>Xploit Firewall Security Analyzer</h3>
         <p>Evidence-based firewall configuration audits with CVE detection, risky-rule analysis and NIST / PCI DSS compliance scoring.</p>
         <div class="btn-row"><a class="btn btn-primary" href="{r("products/firewall-security-analyzer/")}#free-trial">Request a Free Trial</a><a class="btn btn-ghost" href="{r("products/firewall-security-analyzer/")}">Explore</a></div></div></article>
       <article class="item reveal"><div class="pic"><img src="{r("assets/img/products/safemind-learner-dashboard.webp")}" alt="SafeMind learner dashboard" width="770" height="852" loading="lazy" decoding="async"></div>

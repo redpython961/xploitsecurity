@@ -1,4 +1,4 @@
-"""XFSA product page: deployment options (SaaS / Desktop), screenshot showcase, free trial."""
+"""XFSA product page: desktop application, licensing & pricing, screenshot showcase, free trial."""
 import os, json
 from lib import *
 from pages_products import prod_ld, other_products
@@ -51,8 +51,7 @@ REPORT_SHOTS = [
 
 def gallery(d):
     sets = [
-        ("saas", "SaaS version", "cloud", app_shots("xfsa-saas"), ("saas", "SAAS"), ["wide", "", "half", "half"], ""),
-        ("desktop", "Desktop version", "server", app_shots("xfsa-desktop"), ("desk", "DESKTOP"), ["wide", "", "half", "half"], "cyan"),
+        ("desktop", "Desktop application", "server", app_shots("xfsa-desktop"), ("desk", "DESKTOP"), ["wide", "", "half", "half"], "cyan"),
         ("reports", "Assessment reports", "file", REPORT_SHOTS, ("rep", "REPORT"), [""], ""),
     ]
     tabs, panels, first = [], [], True
@@ -74,14 +73,14 @@ def xfsa():
     path = "products/firewall-security-analyzer/"
     crumbs = [("Products", "products/"), ("Xploit Firewall Security Analyzer", path)]
     btns = (f'<a class="btn btn-primary" href="#free-trial">Request a Free Trial {icon("arrow")}</a>'
-            f'<a class="btn btn-ghost" href="#deployment">SaaS or Desktop?</a>')
+            f'<a class="btn btn-ghost" href="#pricing">See licensing &amp; pricing</a>')
     side = f"""<h3>Sample assessment</h3>
 <div class="kpi-row" style="margin-top:4px"><div><strong class="text-red">10.0</strong><span>risk score / 10</span></div><div><strong>48</strong><span>findings</span></div><div><strong class="text-red">9 / 8</strong><span>critical / high</span></div></div>
 <div style="height:16px"></div>{chips(["NIST SP 800-53 Rev. 5", "PCI DSS 4.0.1", "Xploit Firewall Baseline", "Vendor hardening"], "red")}
-<div style="height:10px"></div>{chips(["Available as SaaS", "Available as Desktop"], "cyan")}
+<div style="height:10px"></div>{chips(["Desktop application", "Runs on your infrastructure", "Offline license activation"], "cyan")}
 <p class="note">Figures from a sample report on a FortiGate edge firewall.</p>"""
     hero = page_hero(d, crumbs, "Xploit Firewall Security Analyzer · XFSA", "Secure your network. Validate your defenses. Stay compliant.",
-                     "Automated, evidence-based firewall configuration audits, available as a cloud SaaS or a locally installed desktop application. "
+                     "Automated, evidence-based firewall configuration audits in a desktop application that runs on your own infrastructure, so your configurations never leave your control. "
                      "XFSA finds vulnerable firmware, risky rules and hardening gaps, scores compliance, and tells you exactly how to fix each issue.",
                      btns, side)
     hero = hero.replace('<span class="eyebrow ">Xploit Firewall',
@@ -98,10 +97,9 @@ def xfsa():
     dom_html = "".join(card(ic, t, x) for ic, t, x in domains)
 
     form = lead_form("xfsa-trial", "Free trial request", "Xploit Firewall Security Analyzer", "Request your free XFSA trial",
-                     "Tell us a little about your environment and we'll set up your trial.", "Request a Free Trial",
+                     "14 days, up to 3 firewalls, full features. Tell us about your environment.", "Request a Free Trial",
                      "Thank you, your XFSA free trial request has been received.",
-                     [("Preferred version", "version", ["SaaS (cloud)", "Desktop (local install)", "Not sure yet"]),
-                      ("Number of firewalls", "fw", ["1–5", "6–20", "21–50", "51–200", "200+"]),
+                     [("Number of firewalls", "fw", ["1–5", "6–20", "21–50", "51–200", "200+"]),
                       ("Firewall vendor(s)", "vendor", None)])
 
     body = hero + f"""
@@ -116,47 +114,60 @@ def xfsa():
 {card("shield-check", "Deterministic and repeatable", "Findings come from version-controlled rules, not AI guesses, so results are consistent, explainable and audit-friendly.")}
 </div></div></section>
 
-<section class="section section-alt" id="deployment"><div class="container">
-{section_head("Deployment options", "Two ways to run XFSA. Same engine, same results.", "Choose the cloud for speed and simplicity, or install XFSA locally when your data must stay inside your environment.")}
-<div class="deploy">
-<div class="opt saas reveal"><span class="tag">Option A · Cloud-based</span><h3>XFSA SaaS</h3>
-<p>Run assessments from any modern browser with nothing to install. We host, update and maintain the platform for you.</p>
-{checks(["Accessible through a secure web browser", "No local installation required", "Centralized management and easy access for your team", "Regular updates and maintenance handled by Xploit", "Secure cloud-based data storage and processing"])}
-<p class="best"><strong>Best for:</strong> teams that want to start quickly, collaborate across sites, and always run the latest rule library.</p></div>
-<div class="opt desk reveal"><span class="tag">Option B · Locally installed</span><h3>XFSA Desktop</h3>
-<p>An independent application installed and operated on your own infrastructure, so you keep control of the environment, security and data retention.</p>
-{checks(["Installed and operated on your own infrastructure", "You control the environment, security and data retention", "Configurations and reports stay within your local environment, subject to your infrastructure and configuration", "Suited to strict security, privacy, regulatory or data-residency requirements", "An independent application, with no dependency on a shared cloud service"], "cyan")}
-<p class="best"><strong>Best for:</strong> critical infrastructure, government, finance and OT environments where firewall configurations should not leave the premises.</p></div>
-</div>
-<div class="table-wrap reveal" style="margin-top:28px"><table class="data compare"><caption class="sr-only">XFSA SaaS and Desktop compared</caption>
-<thead><tr><th scope="col">Consideration</th><th scope="col">SaaS</th><th scope="col">Desktop</th></tr></thead><tbody>
-<tr><td>Installation</td><td>None, browser-based</td><td>Installed on your infrastructure</td></tr>
-<tr><td>Where configurations and reports are kept</td><td>Secure cloud storage</td><td>Your local environment</td></tr>
-<tr><td>Updates and maintenance</td><td>Handled by Xploit</td><td>Applied in your environment</td></tr>
-<tr><td>Access for distributed teams</td><td class="yes">✓ Anywhere via browser</td><td>Within your environment</td></tr>
-<tr><td>Control over data residency and retention</td><td>Hosted service</td><td class="yes">✓ Fully under your control</td></tr>
-<tr><td>Strict security, regulatory or residency requirements</td><td class="part">Discuss with us</td><td class="yes">✓ Designed for it</td></tr>
-<tr><td>Same rule library, scoring and reports</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-</tbody></table></div>
-<p class="note">Not sure which fits? Request a free trial and tell us your requirements. We'll recommend the right option.</p>
-</div></section>
+<section class="section section-alt" id="deployment"><div class="container"><div class="split">
+<div class="reveal"><span class="eyebrow cyan">Desktop application</span><h2>Your firewall configurations never leave your control.</h2>
+<p>XFSA is an independent desktop application, installed and operated on your own infrastructure. You keep control of the environment, the security and the retention of your data.</p>
+{checks(["Installed and operated locally on your infrastructure", "Configurations and assessment reports stay in your local environment, subject to your infrastructure and configuration", "Offline license activation for isolated and restricted networks", "Suited to strict security, privacy, regulatory and data-residency requirements", "Regular rule-library and CVE updates with active maintenance"], "cyan")}</div>
+<div class="grid grid-2">
+{card("lock", "Data stays on-premises", "Firewall configurations hold your network's blueprint. With XFSA they are analyzed where they live.", cyan=True)}
+{card("server", "Independent application", "No shared cloud platform to depend on, and no third-party hosting to assess.", cyan=True)}
+{card("key", "Offline activation", "Activate licenses in isolated or restricted environments.", cyan=True)}
+{card("factory", "Built for regulated sectors", "A good fit for critical infrastructure, government, finance and OT environments.", cyan=True)}
+</div></div></div></section>
 
 <section class="section" id="screenshots"><div class="container">
-{section_head("Product showcase", "See XFSA in action.", "Real screens from the application and real pages from an XFSA assessment report. Click any image to enlarge.")}
+{section_head("Product showcase", "See XFSA in action.", "Real screens from the desktop application and real pages from an XFSA assessment report. Click any image to enlarge.")}
 {gallery(d)}
 </div></section>
 
-<section class="section section-alt" id="free-trial"><div class="container"><div class="offer">
+<section class="section section-alt" id="pricing"><div class="container">
+{section_head("Licensing &amp; pricing", "Simple per-firewall licensing.", "Annual subscription based on the number of firewalls you audit. Every tier includes the full product.")}
+<div class="plans">
+<div class="plan reveal"><h3>Starter</h3><span class="users">Up to 5 firewalls</span><div class="price">$1,500<small> / year</small></div><span class="aed">≈ $300 per firewall</span><p>For a first firewall audit program or a single site.</p><a class="btn btn-ghost" href="#free-trial">Start free trial</a></div>
+<div class="plan popular reveal"><span class="pop">MOST POPULAR</span><h3>Professional</h3><span class="users">Up to 25 firewalls</span><div class="price">$4,900<small> / year</small></div><span class="aed">≈ $196 per firewall</span><p>For mid-size organizations with several sites.</p><a class="btn btn-primary" href="#free-trial">Start free trial</a></div>
+<div class="plan reveal"><h3>Business</h3><span class="users">Up to 100 firewalls</span><div class="price">$12,900<small> / year</small></div><span class="aed">≈ $129 per firewall</span><p>For multi-site estates with IT and OT firewalls.</p><a class="btn btn-ghost" href="#free-trial">Start free trial</a></div>
+<div class="plan reveal"><h3>Enterprise</h3><span class="users">Up to 500 firewalls</span><div class="price">$29,900<small> / year</small></div><span class="aed">≈ $60 per firewall · 500+: quote</span><p>For groups, utilities and critical infrastructure.</p><a class="btn btn-ghost" href="{url(d, "contact/?type=sales&interest=firewall-security-analyzer")}">Contact sales</a></div>
+</div>
+<div class="grid grid-3" style="margin-top:28px">
+<div class="card reveal"><h3>Every tier includes</h3>{checks(["All standards: NIST SP 800-53, PCI DSS 4.0.1, Xploit baseline, vendor hardening", "Unlimited re-assessments of licensed firewalls", "PDF reports with evidence and remediation", "Rule-library and CVE updates", "Email support"])}</div>
+<div class="card reveal"><h3>How firewalls are counted</h3>{checks(["One license per separately audited configuration", "Each virtual firewall (VDOM / vsys) counts as one", "An HA pair counts as one firewall", "License count resets every 12 months; retired devices free their slot", "Offline license activation available"])}</div>
+<div class="card reveal"><h3>Perpetual option</h3><p>Prefer a one-off purchase? Buy a perpetual license at 2.5× the annual tier price, plus 20% per year maintenance.</p><p class="small" style="margin-top:12px">Maintenance includes rule-library and CVE updates and support. It's strongly recommended so vulnerability checks stay current.</p></div>
+</div>
+<div class="grid grid-3" style="margin-top:22px">
+<div class="card reveal"><div class="ico">{icon("briefcase")}</div><h3>Consultants &amp; auditors</h3><p>Assessment packs usable across any client, valid for 12 months:</p>{checks(["10 assessments: $990", "50 assessments: $3,900"])}</div>
+<div class="card reveal"><div class="ico">{icon("users")}</div><h3>MSSPs &amp; resellers</h3><p>Monthly per-client-firewall licensing from $8–12 per firewall per month depending on volume, with partner-branded reports. Reseller margins of 20–30%.</p></div>
+<div class="card reveal"><div class="ico">{icon("clipboard")}</div><h3>Assessment as a service</h3><p>Prefer us to run it? Our team performs the XFSA assessment and delivers the report, from $250 per firewall.</p></div>
+</div>
+<div class="card reveal" style="margin-top:22px"><h3>Add-ons &amp; bundles</h3>
+<div class="grid grid-3" style="margin-top:6px">
+<div>{checks(["Premium support: +15%"])}</div>
+<div>{checks(["Onboarding and custom rule packs: on request"])}</div>
+<div>{checks(["XFSA + <a class=\"text-red\" href=\"" + url(d, "products/xploit-grc/") + "\">Xploit GRC</a> bundle: 15% off"])}</div>
+</div></div>
+<p class="note">Prices in USD, billed annually, excluding VAT. Free trial: 14 days, up to 3 firewalls, full features (reports watermarked "TRIAL"), converting to Starter or Professional.</p>
+</div></section>
+
+<section class="section" id="free-trial"><div class="container"><div class="offer">
 <div class="reveal"><span class="badge">{icon("zap")} Free trial</span>
 <h2>Experience XFSA before you buy.</h2>
 <p class="lead">Run XFSA against your own firewall configurations and see the findings, compliance scores and reports for yourself, then decide. No commitment.</p>
 <ol class="steps-mini">
-<li><span><strong>Request your trial</strong>Choose SaaS or Desktop and tell us about your firewalls.</span></li>
-<li><span><strong>Get set up</strong>We provision your SaaS workspace or provide the desktop installer, with a guided walkthrough.</span></li>
+<li><span><strong>Request your trial</strong>Tell us about your firewalls and environment.</span></li>
+<li><span><strong>Get set up</strong>We send the desktop installer and a 14-day trial license, with a guided walkthrough.</span></li>
 <li><span><strong>Assess your firewalls</strong>Upload a configuration export and get an evidence-based report.</span></li>
-<li><span><strong>Decide with confidence</strong>Review the results with our team and choose the edition that fits.</span></li>
+<li><span><strong>Decide with confidence</strong>Review the results with our team and choose the license tier that fits.</span></li>
 </ol>
-<div class="trust-row"><span>{icon("check")}No commitment</span><span>{icon("check")}SaaS or Desktop</span><span>{icon("check")}Guided onboarding</span></div>
+<div class="trust-row"><span>{icon("check")}No commitment</span><span>{icon("check")}14 days · up to 3 firewalls</span><span>{icon("check")}Guided onboarding</span></div>
 </div>
 {form}
 </div></div></section>
@@ -209,14 +220,14 @@ def xfsa():
     body += other_products(d, "firewall-security-analyzer")
     body += f"""<section class="section"><div class="container"><div class="cta-band reveal">
 <span class="eyebrow">Free trial</span><h2>Find the gaps in your firewall before attackers do.</h2>
-<p>Try XFSA on your own configurations, as SaaS or Desktop, and see the results before making a purchasing decision.</p>
+<p>Install XFSA, audit up to three of your own firewalls free for 14 days, and see the results before making a purchasing decision.</p>
 <div class="btn-row"><a class="btn btn-primary" href="#free-trial">Request a Free Trial {icon("arrow")}</a><a class="btn btn-ghost" href="{url(d, "contact/?type=trial&interest=firewall-security-analyzer")}">Contact sales</a><a class="btn btn-wa" href="{SITE["wa"]}" target="_blank" rel="noopener">{WA_SVG} WhatsApp</a></div>
 </div></div></section>"""
     body += sticky_cta("XFSA: try it free on your own firewalls", "Request a Free Trial", "#free-trial")
-    desc = ("Xploit Firewall Security Analyzer (XFSA): SaaS or desktop firewall configuration audits with CVE detection, "
-            "risky-rule analysis and NIST/PCI DSS compliance scoring. Request a free trial.")
+    desc = ("Xploit Firewall Security Analyzer (XFSA): desktop firewall configuration audits with CVE detection, "
+            "risky-rule analysis and NIST/PCI DSS compliance scoring. Per-firewall licensing. Free trial.")
     return path, page(d, path, "Xploit Firewall Security Analyzer (XFSA)", desc, body, "sp",
-                      prod_ld("Xploit Firewall Security Analyzer", desc, path, "SecurityApplication", None, "Web, Desktop"), crumbs,
+                      prod_ld("Xploit Firewall Security Analyzer", desc, path, "SecurityApplication", {"@type": "AggregateOffer", "priceCurrency": "USD", "lowPrice": "1500", "highPrice": "29900", "description": "Annual subscription per firewall tier"}, "Desktop"), crumbs,
                       keywords="firewall security analyzer, firewall configuration audit, firewall compliance, FortiGate audit, firewall rule review, PCI DSS firewall, NIST 800-53 firewall, free trial")
 
 

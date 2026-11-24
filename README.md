@@ -145,12 +145,10 @@ All forms post to the same FormSubmit endpoint. The email subject reads like *"N
 
 ## 10. Adding XFSA application screenshots
 
-The XFSA page has a tabbed showcase (SaaS / Desktop / Assessment reports) with a click-to-enlarge lightbox.
-1. Put real screenshots in:
-   - `assets/img/products/xfsa-saas/`
-   - `assets/img/products/xfsa-desktop/`
+The XFSA page has a tabbed showcase (Desktop application / Assessment reports) with a click-to-enlarge lightbox.
+1. Put real desktop application screenshots in `assets/img/products/xfsa-desktop/`.
 2. Name them in display order, e.g. `01-main-dashboard.webp`, `02-firewall-inventory.webp`, `03-configuration-analysis.webp`. The file name becomes the caption. To use custom captions, add a `captions.json` (`{"01-main-dashboard.webp": "Main dashboard and analytics"}`).
-3. Run `python3 tools/build.py`. The SaaS and Desktop tabs appear automatically once a folder has images; empty folders are hidden, so no placeholder is ever shown.
+3. Run `python3 tools/build.py`. The Desktop tab appears automatically once the folder has images; an empty folder is hidden, so no placeholder is ever shown.
 
 WebP at ~1600 px wide keeps pages fast (PNG/JPG also work).
 
